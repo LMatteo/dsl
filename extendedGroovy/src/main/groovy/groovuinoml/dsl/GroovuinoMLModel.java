@@ -6,6 +6,7 @@ import groovy.lang.Binding;
 import io.github.mosser.arduinoml.kernel.App;
 import io.github.mosser.arduinoml.kernel.behavioral.Action;
 import io.github.mosser.arduinoml.kernel.behavioral.State;
+import io.github.mosser.arduinoml.kernel.behavioral.TimeTransition;
 import io.github.mosser.arduinoml.kernel.behavioral.Transition;
 import io.github.mosser.arduinoml.kernel.generator.ToWiring;
 import io.github.mosser.arduinoml.kernel.generator.Visitor;
@@ -57,6 +58,13 @@ public class GroovuinoMLModel {
 		transition.setNext(to);
 		transition.setSensor(sensor);
 		transition.setValue(value);
+		from.setTransition(transition);
+	}
+
+	public void createTimeTransition(State from, State to, int time) {
+		TimeTransition transition = new TimeTransition();
+		transition.setNext(to);
+		transition.setTime(time);
 		from.setTransition(transition);
 	}
 	

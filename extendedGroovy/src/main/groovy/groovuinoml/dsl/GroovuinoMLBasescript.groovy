@@ -63,7 +63,11 @@ abstract class GroovuinoMLBasescript extends Script {
 
     def makeTransition(State state1, State state2,Time time,int number){
         println "time transition!!!!!"
-    }
+		((GroovuinoMLBinding) this.getBinding()).getGroovuinoMLModel().createTimeTransition(
+				state1,
+				state2,
+				number)
+	}
 	
 	// export name
 	def export(String name) {
