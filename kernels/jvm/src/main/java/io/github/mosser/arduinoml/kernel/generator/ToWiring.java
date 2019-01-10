@@ -31,6 +31,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 		w("}\n");
 
 		w("long time = 0; long debounce = 200;\n");
+		w("long timer = 0; int timeSet = 0;\n");
 
 		for(State state: app.getStates()){
 			state.accept(this);
@@ -75,6 +76,16 @@ public class ToWiring extends Visitor<StringBuffer> {
 		w(String.format("  if( digitalRead(%d) == %s && guard ) {",
 				transition.getSensor().getPin(),transition.getValue()));
 		w("    time = millis();");
+		w(String.format("    state_%s();",transition.getNext().getName()));
+		w("  } else {");
+		w(String.format("    state_%s();",((State) context.get(CURRENT_STATE)).getName()));
+		w("  }");
+	}
+
+	@Override
+	public void visit(TimeTransition transition) {
+
+		w(String.format("  if( %s >= millis() - timer ) {", transition.getTime()));
 		w(String.format("    state_%s();",transition.getNext().getName()));
 		w("  } else {");
 		w(String.format("    state_%s();",((State) context.get(CURRENT_STATE)).getName()));
