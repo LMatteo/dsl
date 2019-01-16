@@ -15,7 +15,7 @@ bricks          :   (sensor|actuator)+;
     location    :   id=IDENTIFIER ':' port=NUMBER;
 
 states               :   state+;
-    state            :   initial? name=IDENTIFIER '{'  action+ (transition|transition_timed) '}';
+    state            :   initial? name=IDENTIFIER '{'  action+ (transition|transition_timed)+ '}';
     action           :   receiver=IDENTIFIER '<=' value=SIGNAL;
     transition       :   trigger=IDENTIFIER 'is' value=SIGNAL '=>' next=IDENTIFIER ;
     transition_timed :   'elapsed time is' time=NUMBER '=>' next=IDENTIFIER;
