@@ -7,10 +7,11 @@ actuator led: 12
 # Declaring states
 on {
     led <= HIGH
-    elapsed time is 200 => off
+    elapsed time is 500 => off
 }
 
 -> off {
     led <= LOW
     button is HIGH => on
+    elapsed time is 10000 => on
 }
