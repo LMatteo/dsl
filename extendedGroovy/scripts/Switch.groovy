@@ -1,10 +1,10 @@
 sensor "button" onPin 9
 actuator "led" pin 12
 
-state "on" means "led" becomes "high"
+state "on" means led becomes high
 state "off" means led becomes low
 
-initial "off"
+initial off
 
 from on to off when time becomes 100
 from off to on when button becomes high

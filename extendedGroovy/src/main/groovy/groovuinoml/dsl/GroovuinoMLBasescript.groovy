@@ -25,11 +25,11 @@ abstract class GroovuinoMLBasescript extends Script {
 		((GroovuinoMLBinding) this.getBinding()).getGroovuinoMLModel().createState(name, actions)
 		// recursive closure to allow multiple and statements
 		def closure
-		closure = { actuator -> 
-			[becomes: { signal ->
+		closure = { Actuator actuator ->
+			[becomes: { SIGNAL signal ->
 				Action action = new Action()
-				action.setActuator(actuator instanceof String ? (Actuator)((GroovuinoMLBinding)this.getBinding()).getVariable(actuator) : (Actuator)actuator)
-				action.setValue(signal instanceof String ? (SIGNAL)((GroovuinoMLBinding)this.getBinding()).getVariable(signal) : (SIGNAL)signal)
+				action.setActuator(actuator)
+				action.setValue(signal)
 				actions.add(action)
 				[and: closure]
 			}]
@@ -38,8 +38,8 @@ abstract class GroovuinoMLBasescript extends Script {
 	}
 	
 	// initial state
-	def initial(state) {
-		((GroovuinoMLBinding) this.getBinding()).getGroovuinoMLModel().setInitialState(state instanceof String ? (State)((GroovuinoMLBinding)this.getBinding()).getVariable(state) : (State)state)
+	def initial(State state) {
+		((GroovuinoMLBinding) this.getBinding()).getGroovuinoMLModel().setInitialState(state)
 	}
 	
 	// from state1 to state2 when sensor becomes signal
