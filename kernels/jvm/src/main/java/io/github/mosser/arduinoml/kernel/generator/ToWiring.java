@@ -91,7 +91,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 
 		w(String.format("  if( %s >= millis() - timer ) {", transition.getTime()));
 		w(String.format("    state_%s();",transition.getNext().getName()));
-		w("    timeSet=0");
+		w("    timeSet=0;");
 		w("  } else {");
 		w(String.format("    state_%s();",((State) context.get(CURRENT_STATE)).getName()));
 		w("  }");
