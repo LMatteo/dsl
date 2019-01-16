@@ -1,2 +1,4 @@
 #!/usr/bin/env bash
-java -jar target/dsl-groovy-1.0-jar-with-dependencies.jar scripts/Switch.groovy > result.ino
+
+
+java -jar target/dsl-groovy-1.0-jar-with-dependencies.jar $1 > result.ino
