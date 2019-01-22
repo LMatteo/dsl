@@ -4,6 +4,8 @@ import io.github.mosser.arduinoml.kernel.App;
 import io.github.mosser.arduinoml.kernel.behavioral.*;
 import io.github.mosser.arduinoml.kernel.structural.*;
 
+import java.util.Map;
+
 /**
  * Quick and dirty visitor to support the generation of Wiring code
  */
@@ -33,7 +35,7 @@ public class ToWiring extends Visitor<StringBuffer> {
         w("long time = 0; long debounce = 200; long last_transition_time = 0;\n");
 
 
-		for (State state : app.getStates()) {
+        for (State state : app.getStates()) {
             state.accept(this);
         }
 
@@ -73,21 +75,26 @@ public class ToWiring extends Visitor<StringBuffer> {
 
     @Override
     public void visit(Transition transition) {
-        w(String.format("  if( digitalRead(%d) == %s && guard ) {",
-                transition.getSensor().getPin(), transition.getValue()));
+        String condition = "";
+        for (Map.Entry<Sensor, SIGNAL> entry : transition.getSensorValue().entrySet()) {
+            condition += String.format("digitalRead(%d) == %s &&",
+                    entry.getKey().getPin(), entry.getValue());
+        }
+        w(String.format("  if( %s && guard ) {",
+                condition.substring(0, condition.length() - 3)));
         w("    time = millis();");
-		w("    last_transition_time = millis();");
+        w("    last_transition_time = millis();");
         w(String.format("    state_%s();", transition.getNext().getName()));
         w("  }");
     }
 
     @Override
     public void visit(TimeTransition transition) {
-		w(String.format("  boolean time_transition = millis() - last_transition_time > %d;", transition.getTime()));
-		w("  if (time_transition) {");
-		w("    last_transition_time = millis();");
-		w(String.format("    state_%s();", transition.getNext().getName()));
-		w("  }");
+        w(String.format("  boolean time_transition = millis() - last_transition_time > %d;", transition.getTime()));
+        w("  if (time_transition) {");
+        w("    last_transition_time = millis();");
+        w(String.format("    state_%s();", transition.getNext().getName()));
+        w("  }");
     }
 
     @Override
