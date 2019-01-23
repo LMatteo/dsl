@@ -9,6 +9,8 @@ state "off" means LED1 becomes low and buzzer becomes low
 from on to off when button becomes low
 from off to on when button becomes high
 
+initial off
+
 export "VerySimpleAlarm"
 
 //     Button LOW

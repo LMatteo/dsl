@@ -3,6 +3,7 @@ package groovuinoml.dsl
 
 import io.github.mosser.arduinoml.kernel.behavioral.Action
 import io.github.mosser.arduinoml.kernel.behavioral.State
+import io.github.mosser.arduinoml.kernel.behavioral.Transition
 import io.github.mosser.arduinoml.kernel.structural.Actuator
 import io.github.mosser.arduinoml.kernel.structural.Sensor
 import io.github.mosser.arduinoml.kernel.structural.SIGNAL
@@ -45,26 +46,33 @@ abstract class GroovuinoMLBasescript extends Script {
 	// from state1 to state2 when sensor becomes signal
 	def from(State state1) {
 		[to: { State state2 ->
-			[when: { sensor ->
-				[becomes: {signal ->
-					makeTransition(state1,state2,sensor,signal)
+			Transition transition = makeCondition(state1,state2)
+
+			def closure
+			closure = { sensor ->
+				[becomes: { signal ->
+					addCondition(transition, sensor, signal)
+					[and: closure]
 				}]
-			}]
+			}
+			[when: closure]
 		}]
 	}
 
-    def makeTransition(State state1, State state2,Sensor sensor,SIGNAL signal){
-        ((GroovuinoMLBinding) this.getBinding()).getGroovuinoMLModel().createTransition(
-                state1,
-                state2,
+	def makeCondition(State state1, State state2){
+		return ((GroovuinoMLBinding) this.getBinding()).getGroovuinoMLModel().createTransition(state1,state2);
+	}
+
+    def addCondition(Transition transition,Sensor sensor,SIGNAL signal){
+        ((GroovuinoMLBinding) this.getBinding()).getGroovuinoMLModel().addSensorCondition(
+                transition,
                 sensor,
                 signal)
     }
 
-    def makeTransition(State state1, State state2,Time time,int number){
-		((GroovuinoMLBinding) this.getBinding()).getGroovuinoMLModel().createTimeTransition(
-				state1,
-				state2,
+    def addCondition(Transition transition,Time time,int number){
+		((GroovuinoMLBinding) this.getBinding()).getGroovuinoMLModel().addTimeCondition(
+				transition,
 				number)
 	}
 	

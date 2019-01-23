@@ -8,6 +8,8 @@ state "off" means LED1 becomes low
 from on to off when button1 becomes high
 from on to off when button1 becomes high
 
+initial off
+
 export "StateBasedAlarm"
 
 //     Button HIGH

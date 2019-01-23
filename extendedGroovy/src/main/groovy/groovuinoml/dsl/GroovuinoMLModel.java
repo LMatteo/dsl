@@ -4,10 +4,7 @@ import java.util.*;
 
 import groovy.lang.Binding;
 import io.github.mosser.arduinoml.kernel.App;
-import io.github.mosser.arduinoml.kernel.behavioral.Action;
-import io.github.mosser.arduinoml.kernel.behavioral.State;
-import io.github.mosser.arduinoml.kernel.behavioral.TimeTransition;
-import io.github.mosser.arduinoml.kernel.behavioral.Transition;
+import io.github.mosser.arduinoml.kernel.behavioral.*;
 import io.github.mosser.arduinoml.kernel.generator.ToWiring;
 import io.github.mosser.arduinoml.kernel.generator.Visitor;
 import io.github.mosser.arduinoml.kernel.structural.Actuator;
@@ -53,19 +50,26 @@ public class GroovuinoMLModel {
 		this.binding.setVariable(name, state);
 	}
 	
-	public void createTransition(State from, State to, Sensor sensor, SIGNAL value) {
+	public Transition createTransition(State from, State to) {
 		Transition transition = new Transition();
 		transition.setNext(to);
-		transition.setSensor(sensor);
-		transition.setValue(value);
 		from.setTransition(transition);
+		return transition;
 	}
 
-	public void createTimeTransition(State from, State to, int time) {
-		TimeTransition transition = new TimeTransition();
-		transition.setNext(to);
-		transition.setTime(time);
-		from.setTransition(transition);
+	public Transition addSensorCondition(Transition transition,Sensor sensor, SIGNAL signal){
+		SensorCondition condition = new SensorCondition();
+		condition.setSensor(sensor);
+		condition.setValue(signal);
+		transition.setConditon(condition);
+		return transition;
+	}
+
+	public Transition addTimeCondition(Transition transition, int time) {
+		TimeCondition condition = new TimeCondition();
+		condition.setTime(time);
+		transition.setConditon(condition);
+		return transition;
 	}
 	
 	public void setInitialState(State state) {
