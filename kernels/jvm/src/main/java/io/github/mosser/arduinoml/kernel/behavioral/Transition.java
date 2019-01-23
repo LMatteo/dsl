@@ -25,6 +25,10 @@ public class Transition implements Visitable {
         return condition;
     }
 
+    public void setConditions(List<Condition> conditions) {
+    	this.condition = conditions;
+	}
+
     public void setConditon(Condition conditon) {
         this.condition.add(conditon);
     }

@@ -12,6 +12,6 @@ on {
 
 -> off {
     led <= LOW
-    button is HIGH => on
+    button is HIGH elapsed time is 1000 => on
     elapsed time is 10000 => on
 }

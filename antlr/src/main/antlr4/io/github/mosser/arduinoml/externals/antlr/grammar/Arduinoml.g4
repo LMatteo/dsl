@@ -14,12 +14,14 @@ bricks          :   (sensor|actuator)+;
     actuator    :   'actuator' location ;
     location    :   id=IDENTIFIER ':' port=NUMBER;
 
-states               :   state+;
-    state            :   initial? name=IDENTIFIER '{'  action+ (transition|transition_timed)+ '}';
-    action           :   receiver=IDENTIFIER '<=' value=SIGNAL;
-    transition       :   trigger=IDENTIFIER 'is' value=SIGNAL '=>' next=IDENTIFIER ;
-    transition_timed :   'elapsed time is' time=NUMBER '=>' next=IDENTIFIER;
-    initial          :   '->';
+states                   :   state+;
+    state                :   initial? name=IDENTIFIER '{'  action+ transition+ '}';
+    action               :   receiver=IDENTIFIER '<=' value=SIGNAL;
+    transition           :   transition_condition+ '=>' next=IDENTIFIER ;
+    transition_condition :   sensor_condition | time_transition;
+    time_transition     :   'elapsed time is' time=NUMBER;
+    sensor_condition     :   trigger=IDENTIFIER 'is' value=SIGNAL ();
+    initial              :   '->';
 
 /*****************
  ** Lexer rules **
@@ -28,6 +30,7 @@ states               :   state+;
 NUMBER          :   DIGIT (DIGIT|'0')*;
 IDENTIFIER      :   LOWERCASE (LOWERCASE|UPPERCASE)+;
 SIGNAL          :   'HIGH' | 'LOW';
+
 
 /*************
  ** Helpers **
