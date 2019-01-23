@@ -4,15 +4,14 @@ import io.github.mosser.arduinoml.externals.antlr.grammar.*;
 
 
 import io.github.mosser.arduinoml.kernel.App;
-import io.github.mosser.arduinoml.kernel.behavioral.Action;
-import io.github.mosser.arduinoml.kernel.behavioral.State;
-import io.github.mosser.arduinoml.kernel.behavioral.TimeTransition;
-import io.github.mosser.arduinoml.kernel.behavioral.Transition;
+import io.github.mosser.arduinoml.kernel.behavioral.*;
 import io.github.mosser.arduinoml.kernel.structural.Actuator;
 import io.github.mosser.arduinoml.kernel.structural.SIGNAL;
 import io.github.mosser.arduinoml.kernel.structural.Sensor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ModelBuilder extends ArduinomlBaseListener {
@@ -37,18 +36,12 @@ public class ModelBuilder extends ArduinomlBaseListener {
     private Map<String, Actuator>     actuators   = new HashMap<>();
     private Map<String, State>        states      = new HashMap<>();
     private Map<String, Binding>      bindings    = new HashMap<>();
-    private Map<String, TimeBinding>  timeBinding = new HashMap<>();
 
     private class Binding { // used to support state resolution for transitions
         String to; // name of the next state, as its instance might not have been compiled yet
-        Sensor trigger;
-        SIGNAL value;
+        List<Condition> conditions;
     }
 
-    private class TimeBinding {
-        String to;
-        int time;
-    }
 
     private State currentState = null;
 
@@ -66,14 +59,7 @@ public class ModelBuilder extends ArduinomlBaseListener {
         // Resolving states in transitions
         bindings.forEach((key, binding) ->  {
             Transition t = new Transition();
-            t.setSensor(binding.trigger);
-            t.setValue(binding.value);
-            t.setNext(states.get(binding.to));
-            states.get(key).setTransition(t);
-        });
-        timeBinding.forEach((key, binding) -> {
-            TimeTransition t = new TimeTransition();
-            t.setTime(binding.time);
+            t.setConditions(binding.conditions);
             t.setNext(states.get(binding.to));
             states.get(key).setTransition(t);
         });
@@ -140,18 +126,26 @@ public class ModelBuilder extends ArduinomlBaseListener {
         // Creating a placeholder as the next state might not have been compiled yet.
         Binding toBeResolvedLater = new Binding();
         toBeResolvedLater.to      = ctx.next.getText();
-        toBeResolvedLater.trigger = sensors.get(ctx.trigger.getText());
-        toBeResolvedLater.value   = SIGNAL.valueOf(ctx.value.getText());
+        List<ArduinomlParser.Transition_conditionContext> transitionConditions = ctx.transition_condition();
+        List<Condition> conditions = new ArrayList<>();
+        for (ArduinomlParser.Transition_conditionContext transition: transitionConditions) {
+            ArduinomlParser.Time_transitionContext time_transitionContext = transition.time_transition();
+            ArduinomlParser.Sensor_conditionContext sensorConditionContext = transition.sensor_condition();
+            if (transition.sensor_condition() != null) {
+                SensorCondition sensorCondition = new SensorCondition();
+                sensorCondition.setSensor(sensors.get(sensorConditionContext.trigger.getText()));
+                sensorCondition.setValue(SIGNAL.valueOf(sensorConditionContext.value.getText()));
+                conditions.add(sensorCondition);
+            } else {
+                TimeCondition timeCondition = new TimeCondition();
+                timeCondition.setTime(Integer.parseInt(time_transitionContext.time.getText()));
+                conditions.add(timeCondition);
+            }
+        }
+        toBeResolvedLater.conditions = conditions;
         bindings.put(currentState.getName(), toBeResolvedLater);
     }
 
-    @Override
-    public void enterTransition_timed(ArduinomlParser.Transition_timedContext ctx) {
-        TimeBinding toBeResolvedLater = new TimeBinding();
-        toBeResolvedLater.time = Integer.parseInt(ctx.time.getText());
-        toBeResolvedLater.to = ctx.next.getText();
-        timeBinding.put(currentState.getName(), toBeResolvedLater);
-    }
 
     @Override
     public void enterInitial(ArduinomlParser.InitialContext ctx) {
