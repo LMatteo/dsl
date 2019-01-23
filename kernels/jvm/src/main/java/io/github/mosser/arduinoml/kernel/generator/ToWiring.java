@@ -76,22 +76,16 @@ public class ToWiring extends Visitor<StringBuffer> {
     @Override
     public void visit(Transition transition) {
         String condition = "";
-        for (Map.Entry<Sensor, SIGNAL> entry : transition.getSensorValue().entrySet()) {
-            condition += String.format("digitalRead(%d) == %s &&",
-                    entry.getKey().getPin(), entry.getValue());
+        for (Condition c : transition.getCondition()) {
+            if (c instanceof SensorCondition) {
+                condition += String.format(" digitalRead(%d) == %s &&", ((SensorCondition) c).getSensor().getPin(), ((SensorCondition) c).getValue());
+            } else if (c instanceof TimeCondition) {
+                condition += String.format(" ( millis() - last_transition_time > %d ) &&", ((TimeCondition) c).getTime());
+            }
         }
-        w(String.format("  if( %s && guard ) {",
+        w(String.format("  if(%s && guard ) {",
                 condition.substring(0, condition.length() - 3)));
         w("    time = millis();");
-        w("    last_transition_time = millis();");
-        w(String.format("    state_%s();", transition.getNext().getName()));
-        w("  }");
-    }
-
-    @Override
-    public void visit(TimeTransition transition) {
-        w(String.format("  boolean time_transition = millis() - last_transition_time > %d;", transition.getTime()));
-        w("  if (time_transition) {");
         w("    last_transition_time = millis();");
         w(String.format("    state_%s();", transition.getNext().getName()));
         w("  }");

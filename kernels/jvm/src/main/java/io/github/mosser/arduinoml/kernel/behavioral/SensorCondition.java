@@ -3,17 +3,24 @@ package io.github.mosser.arduinoml.kernel.behavioral;
 import io.github.mosser.arduinoml.kernel.structural.SIGNAL;
 import io.github.mosser.arduinoml.kernel.structural.Sensor;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class SensorCondition implements Condition {
-    private Map<Sensor, SIGNAL> sensorValue = new HashMap<>();
+    private Sensor sensor;
+    private SIGNAL value;
 
-    public Map<Sensor, SIGNAL> getSensorValue() {
-        return sensorValue;
+    public Sensor getSensor() {
+        return sensor;
     }
 
-    public void setSensorValue(Sensor sensor, SIGNAL value) {
-        this.sensorValue.put(sensor, value);
+    public void setSensor(Sensor sensor) {
+        this.sensor = sensor;
     }
+
+    public SIGNAL getValue() {
+        return value;
+    }
+
+    public void setValue(SIGNAL value) {
+        this.value = value;
+    }
+
 }

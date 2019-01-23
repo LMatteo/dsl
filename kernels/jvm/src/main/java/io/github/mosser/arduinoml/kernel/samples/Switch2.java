@@ -1,9 +1,7 @@
 package io.github.mosser.arduinoml.kernel.samples;
 
 import io.github.mosser.arduinoml.kernel.App;
-import io.github.mosser.arduinoml.kernel.behavioral.Action;
-import io.github.mosser.arduinoml.kernel.behavioral.State;
-import io.github.mosser.arduinoml.kernel.behavioral.Transition;
+import io.github.mosser.arduinoml.kernel.behavioral.*;
 import io.github.mosser.arduinoml.kernel.generator.ToWiring;
 import io.github.mosser.arduinoml.kernel.generator.Visitor;
 import io.github.mosser.arduinoml.kernel.structural.Actuator;
@@ -22,8 +20,8 @@ public class Switch2 {
         button.setPin(9);
 
         Sensor button2 = new Sensor();
-        button.setName("button2");
-        button.setPin(10);
+        button2.setName("button2");
+        button2.setPin(10);
 
         Actuator led = new Actuator();
         led.setName("LED");
@@ -49,25 +47,47 @@ public class Switch2 {
         on.setActions(Arrays.asList(switchTheLightOn));
         off.setActions(Arrays.asList(switchTheLightOff));
 
+        TimeCondition timeCondition = new TimeCondition();
+        timeCondition.setTime(1000);
+
         // Creating transitions
         Transition on2off = new Transition();
         on2off.setNext(off);
-        on2off.setSensorValue(button, SIGNAL.HIGH);
-        on2off.setSensorValue(button2, SIGNAL.HIGH);
+        SensorCondition sensorCondition3 = new SensorCondition();
+        sensorCondition3.setSensor(button);
+        sensorCondition3.setValue(SIGNAL.LOW);
+        on2off.setConditon(sensorCondition3);
+
+        Transition on2off2 = new Transition();
+        on2off2.setNext(off);
+        SensorCondition sensorCondition4 = new SensorCondition();
+        sensorCondition4.setSensor(button2);
+        sensorCondition4.setValue(SIGNAL.LOW);
+        on2off2.setConditon(sensorCondition4);
+        on2off2.setConditon(timeCondition);
+
 
         Transition off2on = new Transition();
+
         off2on.setNext(on);
-        off2on.setSensorValue(button, SIGNAL.LOW);
-        off2on.setSensorValue(button2, SIGNAL.LOW);
+        SensorCondition sensorCondition = new SensorCondition();
+        sensorCondition.setSensor(button);
+        sensorCondition.setValue(SIGNAL.HIGH);
+        SensorCondition sensorCondition2 = new SensorCondition();
+        sensorCondition2.setSensor(button2);
+        sensorCondition2.setValue(SIGNAL.HIGH);
+        off2on.setConditon(sensorCondition);
+        off2on.setConditon(sensorCondition2);
 
         // Binding transitions to states
         on.setTransition(on2off);
+        on.setTransition(on2off2);
         off.setTransition(off2on);
 
         // Building the App
         App theSwitch = new App();
         theSwitch.setName("Switch!");
-        theSwitch.setBricks(Arrays.asList(button, led));
+        theSwitch.setBricks(Arrays.asList(button, button2, led));
         theSwitch.setStates(Arrays.asList(on, off));
         theSwitch.setInitial(off);
 
