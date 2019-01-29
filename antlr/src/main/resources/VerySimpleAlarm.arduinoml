@@ -1,0 +1,19 @@
+application verySimpleAlarm
+
+# Declaring bricks
+sensor button: 8
+actuator ledOne: 11
+actuator buzzer: 12
+
+# Declaring states
+on {
+    ledOne <= HIGH
+    buzzer <= HIGH
+    button is LOW => off
+}
+
+-> off {
+    ledOne <= LOW
+    buzzer <= LOW
+    button is HIGH => on
+}

@@ -1,16 +1,18 @@
-application redButton
+application stateBasedAlarm
 
 # Declaring bricks
-sensore button: 9
-actuator led: 12
+sensor button: 8
+actuator ledOne: 11
 
 # Declaring states
 on {
-    led <= HIGH
+    ledOne <= HIGH
     button is HIGH => off
 }
 
 -> off {
-    led <= LOW
+    ledOne <= LOW
     button is HIGH => on
 }
+
+

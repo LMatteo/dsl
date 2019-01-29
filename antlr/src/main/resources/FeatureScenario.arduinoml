@@ -1,0 +1,17 @@
+application switch
+
+# Declaring bricks
+sensor button: 8
+actuator ledOne: 11
+
+# Declaring states
+on {
+    ledOne <= HIGH
+    elapsed time is 800 => off
+}
+
+-> off {
+    ledOne <= LOW
+    button is HIGH => on
+}
+
