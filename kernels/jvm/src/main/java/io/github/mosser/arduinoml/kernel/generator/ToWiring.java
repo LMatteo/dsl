@@ -45,7 +45,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 
         if (app.getInitial() != null) {
             w("void loop() {");
-            w(String.format("  mode_%s();", app.getInitial().getName()));
+            w(String.format("  state_%s_%s();", app.getInitial().getInitial().getName(), app.getInitial().getName()));
             w("}");
         }
     }

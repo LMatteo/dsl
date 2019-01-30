@@ -23,7 +23,4 @@ public class ModeTransition extends Transition implements Visitable {
         visitor.visit(this);
     }
 
-    public void setCondition(List<Condition> conditions) {
-        this.conditions = conditions;
-    }
 }
