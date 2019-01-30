@@ -1,4 +1,6 @@
 package io.github.mosser.arduinoml.kernel.behavioral;
 
-public interface Condition {
+import io.github.mosser.arduinoml.kernel.generator.Visitable;
+
+public interface Condition extends Visitable {
 }

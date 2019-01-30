@@ -21,6 +21,10 @@ public class ToWiring extends Visitor<StringBuffer> {
         result.append(String.format("%s\n", s));
     }
 
+    private void wnl(String s){
+        result.append(s);
+    }
+
     @Override
     public void visit(App app) {
         w("// Wiring code generated from an ArduinoML model");
@@ -75,20 +79,26 @@ public class ToWiring extends Visitor<StringBuffer> {
 
     @Override
     public void visit(Transition transition) {
-        String condition = "";
+        wnl("if (");
         for (Condition c : transition.getCondition()) {
-            if (c instanceof SensorCondition) {
-                condition += String.format(" digitalRead(%d) == %s &&", ((SensorCondition) c).getSensor().getPin(), ((SensorCondition) c).getValue());
-            } else if (c instanceof TimeCondition) {
-                condition += String.format(" ( millis() - last_transition_time > %d ) &&", ((TimeCondition) c).getTime());
-            }
+            c.accept(this);
+            w(" &&");
         }
-        w(String.format("  if(%s && guard ) {",
-                condition.substring(0, condition.length() - 3)));
+        w("guard){");
         w("    time = millis();");
         w("    last_transition_time = millis();");
         w(String.format("    state_%s();", transition.getNext().getName()));
         w("  }");
+    }
+
+    @Override
+    public void visit(TimeCondition timeCondition){
+        wnl(String.format(" ( millis() - last_transition_time > %d )", timeCondition.getTime()));
+    }
+
+    @Override
+    public void visit(SensorCondition sensorCondition) {
+        wnl(String.format(" digitalRead(%d) == %s", sensorCondition.getSensor().getPin(), sensorCondition.getValue()));
     }
 
     @Override
