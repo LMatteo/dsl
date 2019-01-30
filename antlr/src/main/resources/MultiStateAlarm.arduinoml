@@ -1,0 +1,25 @@
+application multiStateAlarm
+
+# Declaring bricks
+sensor button: 8
+actuator ledOne: 11
+actuator buzzer: 12
+
+# Declaring states
+buzz {
+    buzzer <= HIGH
+    ledOne <= LOW
+    button is HIGH => light
+}
+
+light {
+    buzzer <= LOW
+    ledOne <= HIGH
+    button is HIGH => init
+}
+
+-> init {
+    buzzer <= LOW
+    ledOne <= LOW
+    button is HIGH => buzz
+}

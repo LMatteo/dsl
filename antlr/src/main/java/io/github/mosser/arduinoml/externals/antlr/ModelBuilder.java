@@ -35,9 +35,10 @@ public class ModelBuilder extends ArduinomlBaseListener {
     private Map<String, Sensor>       sensors     = new HashMap<>();
     private Map<String, Actuator>     actuators   = new HashMap<>();
     private Map<String, State>        states      = new HashMap<>();
-    private Map<String, Binding>      bindings    = new HashMap<>();
+    private List<Binding>             bindings    = new ArrayList<>();
 
     private class Binding { // used to support state resolution for transitions
+        String state;
         String to; // name of the next state, as its instance might not have been compiled yet
         List<Condition> conditions;
     }
@@ -57,11 +58,11 @@ public class ModelBuilder extends ArduinomlBaseListener {
 
     @Override public void exitRoot(ArduinomlParser.RootContext ctx) {
         // Resolving states in transitions
-        bindings.forEach((key, binding) ->  {
+        bindings.forEach((binding) ->  {
             Transition t = new Transition();
             t.setConditions(binding.conditions);
             t.setNext(states.get(binding.to));
-            states.get(key).setTransition(t);
+            states.get(binding.state).setTransition(t);
         });
         this.built = true;
     }
@@ -143,7 +144,8 @@ public class ModelBuilder extends ArduinomlBaseListener {
             }
         }
         toBeResolvedLater.conditions = conditions;
-        bindings.put(currentState.getName(), toBeResolvedLater);
+        toBeResolvedLater.state = currentState.getName();
+        bindings.add(toBeResolvedLater);
     }
 
 

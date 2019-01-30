@@ -1,0 +1,18 @@
+application dualCheckAlarm
+
+# Declaring bricks
+sensor buttonOne: 8
+sensor buttonTwo: 9
+actuator led: 10
+
+# Declaring states
+on {
+    led <= HIGH
+    buttonOne is LOW => off
+    buttonTwo is LOW => off
+}
+
+-> off {
+    led <= LOW
+    buttonOne is HIGH buttonTwo is HIGH => on
+}
