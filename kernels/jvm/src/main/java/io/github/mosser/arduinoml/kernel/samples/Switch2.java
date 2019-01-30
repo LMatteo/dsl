@@ -52,14 +52,14 @@ public class Switch2 {
 
         // Creating transitions
         Transition on2off = new Transition();
-        on2off.setNext(off);
+//        on2off.setNext(off);
         SensorCondition sensorCondition3 = new SensorCondition();
         sensorCondition3.setSensor(button);
         sensorCondition3.setValue(SIGNAL.LOW);
         on2off.setConditon(sensorCondition3);
 
         Transition on2off2 = new Transition();
-        on2off2.setNext(off);
+//        on2off2.setNext(off);
         SensorCondition sensorCondition4 = new SensorCondition();
         sensorCondition4.setSensor(button2);
         sensorCondition4.setValue(SIGNAL.LOW);
@@ -69,7 +69,7 @@ public class Switch2 {
 
         Transition off2on = new Transition();
 
-        off2on.setNext(on);
+//        off2on.setNext(on);
         SensorCondition sensorCondition = new SensorCondition();
         sensorCondition.setSensor(button);
         sensorCondition.setValue(SIGNAL.HIGH);
@@ -80,16 +80,16 @@ public class Switch2 {
         off2on.setConditon(sensorCondition2);
 
         // Binding transitions to states
-        on.setTransition(on2off);
-        on.setTransition(on2off2);
-        off.setTransition(off2on);
+//        on.setTransition(on2off);
+//        on.setTransition(on2off2);
+//        off.setTransition(off2on);
 
         // Building the App
         App theSwitch = new App();
         theSwitch.setName("Switch!");
         theSwitch.setBricks(Arrays.asList(button, button2, led));
-        theSwitch.setStates(Arrays.asList(on, off));
-        theSwitch.setInitial(off);
+//        theSwitch.setStates(Arrays.asList(on, off));
+//        theSwitch.setInitial(off);
 
         // Generating Code
         Visitor codeGenerator = new ToWiring();

@@ -12,6 +12,7 @@ import java.util.Map;
 public class ToWiring extends Visitor<StringBuffer> {
 
     private final static String CURRENT_STATE = "current_state";
+    private final static String CURRENT_MODE = "current_mode";
 
     public ToWiring() {
         this.result = new StringBuffer();
@@ -21,7 +22,7 @@ public class ToWiring extends Visitor<StringBuffer> {
         result.append(String.format("%s\n", s));
     }
 
-    private void wnl(String s){
+    private void wnl(String s) {
         result.append(s);
     }
 
@@ -38,14 +39,13 @@ public class ToWiring extends Visitor<StringBuffer> {
 
         w("long time = 0; long debounce = 200; long last_transition_time = 0;\n");
 
-
-        for (State state : app.getStates()) {
-            state.accept(this);
+        for (Mode mode : app.getModes()) {
+            mode.accept(this);
         }
 
         if (app.getInitial() != null) {
             w("void loop() {");
-            w(String.format("  state_%s();", app.getInitial().getName()));
+            w(String.format("  mode_%s();", app.getInitial().getName()));
             w("}");
         }
     }
@@ -63,36 +63,71 @@ public class ToWiring extends Visitor<StringBuffer> {
 
     @Override
     public void visit(State state) {
-        w(String.format("void state_%s() {", state.getName()));
+        w(String.format("void state_%s_%s() {", state.getName(), ((Mode) context.get(CURRENT_MODE)).getName()));
         for (Action action : state.getActions()) {
             action.accept(this);
         }
 
         w("  boolean guard = millis() - time > debounce;");
         context.put(CURRENT_STATE, state);
-        for (Transition transition : state.getTransitions()) {
-            transition.accept(this);
+        for (ModeTransition modeTransition : state.getMode().getModeTransitions()) {
+            modeTransition.accept(this);
         }
-        w(String.format("  state_%s();", ((State) context.get(CURRENT_STATE)).getName()));
+        for (StateTransition stateTransition : state.getStateTransitions()) {
+            stateTransition.accept(this);
+        }
+
+        w(String.format("  state_%s_%s();", ((State) context.get(CURRENT_STATE)).getName(), ((Mode) context.get(CURRENT_MODE)).getName()));
         w("}\n");
     }
 
     @Override
-    public void visit(Transition transition) {
-        wnl("if (");
-        for (Condition c : transition.getCondition()) {
-            c.accept(this);
-            w(" &&");
+    public void visit(Mode mode) {
+//        w(String.format("void mode_%s() {", mode.getName()));
+
+//        w("  boolean guard = millis() - time > debounce;");
+        context.put(CURRENT_MODE, mode);
+//        for (ModeTransition modeTransition : mode.getModeTransitions()) {
+//            modeTransition.accept(this);
+//        }
+//        w(String.format("  mode_%s();", ((Mode) context.get(CURRENT_MODE)).getName()));
+//        w("}\n");
+
+        for (State state : mode.getStates()) {
+            state.accept(this);
         }
-        w("guard){");
+    }
+
+    @Override
+    public void visit(ModeTransition modeTransition) {
+        wnl("  if (");
+        for (Condition c : modeTransition.getCondition()) {
+            c.accept(this);
+            wnl(" &&");
+        }
+        w(" guard){");
         w("    time = millis();");
         w("    last_transition_time = millis();");
-        w(String.format("    state_%s();", transition.getNext().getName()));
+        w(String.format("    state_%s_%s();", modeTransition.getNext().getInitial().getName(), modeTransition.getNext().getName()));
         w("  }");
     }
 
     @Override
-    public void visit(TimeCondition timeCondition){
+    public void visit(StateTransition stateTransition) {
+        wnl("  if (");
+        for (Condition c : stateTransition.getCondition()) {
+            c.accept(this);
+            wnl(" &&");
+        }
+        w(" guard){");
+        w("    time = millis();");
+        w("    last_transition_time = millis();");
+        w(String.format("    state_%s_%s();", stateTransition.getNext().getName(), stateTransition.getNext().getMode().getName()));
+        w("  }");
+    }
+
+    @Override
+    public void visit(TimeCondition timeCondition) {
         wnl(String.format(" ( millis() - last_transition_time > %d )", timeCondition.getTime()));
     }
 

@@ -70,37 +70,37 @@ public class TwoTran {
 
         // Creating transitions
         Transition init2a = new Transition();
-        init2a.setNext(a);
+//        init2a.setNext(a);
 //        init2a.setSensor(button);
 //        init2a.setValue(SIGNAL.HIGH);
 
         Transition init2b = new Transition();
-        init2b.setNext(b);
+//        init2b.setNext(b);
 //        init2b.setSensor(button2);
 //        init2b.setValue(SIGNAL.HIGH);
 
         Transition a2init = new Transition();
-        a2init.setNext(init);
+//        a2init.setNext(init);
 //        a2init.setSensor(button);
 //        a2init.setValue(SIGNAL.LOW);
 
         Transition b2init = new Transition();
-        b2init.setNext(init);
+//        b2init.setNext(init);
 //        b2init.setSensor(button2);
 //        b2init.setValue(SIGNAL.LOW);
 
         // Binding transitions to states
-        init.setTransition(init2a);
-        init.setTransition(init2b);
-        a.setTransition(a2init);
-        b.setTransition(b2init);
+//        init.setTransition(init2a);
+//        init.setTransition(init2b);
+//        a.setTransition(a2init);
+//        b.setTransition(b2init);
 
         // Building the App
         App whatever = new App();
         whatever.setName("init2ab");
         whatever.setBricks(Arrays.asList(button, button2, led, led2));
-        whatever.setStates(Arrays.asList(init, a, b));
-        whatever.setInitial(init);
+//        whatever.setStates(Arrays.asList(init, a, b));
+//        whatever.setInitial(init);
 
         // Generating Code
         Visitor codeGenerator = new ToWiring();

@@ -9,32 +9,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Transition implements Visitable {
+public class Transition {
     private List<Condition> condition = new ArrayList<>();
-    private State next;
-
-    public State getNext() {
-        return next;
-    }
-
-    public void setNext(State next) {
-        this.next = next;
-    }
 
     public List<Condition> getCondition() {
         return condition;
     }
 
     public void setConditions(List<Condition> conditions) {
-    	this.condition = conditions;
-	}
+        this.condition = conditions;
+    }
 
     public void setConditon(Condition conditon) {
         this.condition.add(conditon);
     }
 
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
 }
