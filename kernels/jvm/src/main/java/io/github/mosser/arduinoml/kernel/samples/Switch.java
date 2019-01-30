@@ -28,8 +28,8 @@ public class Switch {
         led.setPin(11);
 
         Actuator led2 = new Actuator();
-        led.setName("LED2");
-        led.setPin(12);
+        led2.setName("LED2");
+        led2.setPin(12);
 
         // Declaring modes
         Mode A = new Mode();
