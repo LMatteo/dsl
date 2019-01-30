@@ -1,5 +1,6 @@
 package io.github.mosser.arduinoml.kernel;
 
+import io.github.mosser.arduinoml.kernel.behavioral.Mode;
 import io.github.mosser.arduinoml.kernel.behavioral.State;
 import io.github.mosser.arduinoml.kernel.generator.Visitable;
 import io.github.mosser.arduinoml.kernel.generator.Visitor;
@@ -12,7 +13,7 @@ public class App implements NamedElement, Visitable {
 
 	private String name;
 	private List<Brick> bricks = new ArrayList<Brick>();
-	private List<State> states = new ArrayList<State>();
+	private List<Mode>  modes = new ArrayList<>();
 	private State initial;
 
 	@Override
@@ -33,15 +34,15 @@ public class App implements NamedElement, Visitable {
 		this.bricks = bricks;
 	}
 
-	public List<State> getStates() {
-		return states;
-	}
+    public List<Mode> getModes() {
+        return modes;
+    }
 
-	public void setStates(List<State> states) {
-		this.states = states;
-	}
+    public void setModes(List<Mode> modes) {
+        this.modes = modes;
+    }
 
-	public State getInitial() {
+    public State getInitial() {
 		return initial;
 	}
 
