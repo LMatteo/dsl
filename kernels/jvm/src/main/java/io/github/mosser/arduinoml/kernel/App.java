@@ -12,9 +12,9 @@ import java.util.List;
 public class App implements NamedElement, Visitable {
 
 	private String name;
-	private List<Brick> bricks = new ArrayList<Brick>();
+	private List<Brick> bricks = new ArrayList<>();
 	private List<Mode>  modes = new ArrayList<>();
-	private State initial;
+	private Mode initial;
 
 	@Override
 	public String getName() {
@@ -42,11 +42,11 @@ public class App implements NamedElement, Visitable {
         this.modes = modes;
     }
 
-    public State getInitial() {
+    public Mode getInitial() {
 		return initial;
 	}
 
-	public void setInitial(State initial) {
+	public void setInitial(Mode initial) {
 		this.initial = initial;
 	}
 

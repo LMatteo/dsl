@@ -9,8 +9,10 @@ import java.util.List;
 
 public class Mode implements NamedElement, Visitable {
 
-    List<State> states = new ArrayList<>();
-    List<ModeTransition> modeTransitions = new ArrayList<>();
+    private String name;
+    private List<State> states = new ArrayList<>();
+    private List<ModeTransition> modeTransitions = new ArrayList<>();
+    private State initial;
 
     public void addState(State state) {
         states.add(state);
@@ -22,12 +24,20 @@ public class Mode implements NamedElement, Visitable {
 
     @Override
     public void setName(String name) {
-
+        this.name = name;
     }
 
     @Override
     public String getName() {
-        return null;
+        return name;
+    }
+
+    public State getInitial() {
+        return initial;
+    }
+
+    public void setInitial(State initial) {
+        this.initial = initial;
     }
 
     @Override

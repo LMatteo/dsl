@@ -17,4 +17,7 @@ public class ModeTransition {
     }
 
 
+    public void setCondition(List<Condition> conditions) {
+        this.conditions = conditions;
+    }
 }
