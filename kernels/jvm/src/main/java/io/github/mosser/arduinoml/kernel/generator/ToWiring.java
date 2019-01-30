@@ -83,16 +83,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 
     @Override
     public void visit(Mode mode) {
-//        w(String.format("void mode_%s() {", mode.getName()));
-
-//        w("  boolean guard = millis() - time > debounce;");
         context.put(CURRENT_MODE, mode);
-//        for (ModeTransition modeTransition : mode.getModeTransitions()) {
-//            modeTransition.accept(this);
-//        }
-//        w(String.format("  mode_%s();", ((Mode) context.get(CURRENT_MODE)).getName()));
-//        w("}\n");
-
         for (State state : mode.getStates()) {
             state.accept(this);
         }
