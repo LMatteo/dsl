@@ -13,6 +13,7 @@ public class GroovuinoMLBinding extends Binding {
 	
 	public GroovuinoMLBinding() {
 		super();
+		super.setVariable("time", new Time());
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -44,6 +45,10 @@ public class GroovuinoMLBinding extends Binding {
 	}
 	
 	public void setVariable(String name, Object value) {
+		if(name.equals("time")){
+			throw new RuntimeException("cannot set variable named time : time is a keyword");
+		}
+
 		super.setVariable(name, value);
 	}
 	

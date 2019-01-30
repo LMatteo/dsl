@@ -19,7 +19,6 @@ class GroovuinoMLDSL {
 		
 		binding.setVariable("high", SIGNAL.HIGH)
 		binding.setVariable("low", SIGNAL.LOW)
-		binding.setVariable("time",new Time())
 	}
 	
 	private static CompilerConfiguration getDSLConfiguration() {
