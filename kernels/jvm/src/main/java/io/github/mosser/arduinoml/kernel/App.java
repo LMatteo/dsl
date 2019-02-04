@@ -13,6 +13,7 @@ public class App implements NamedElement, Visitable {
 
     private String name;
     private List<Brick> bricks = new ArrayList<Brick>();
+    private List<Brick> watchs = new ArrayList<>();
     private List<Mode> modes = new ArrayList<>();
     private Mode initial;
 
@@ -40,6 +41,14 @@ public class App implements NamedElement, Visitable {
 
     public void setModes(List<Mode> modes) {
         this.modes = modes;
+    }
+
+    public List<Brick> getWatchs() {
+        return watchs;
+    }
+
+    public void setWatchs(List<Brick> watchs) {
+        this.watchs = watchs;
     }
 
     public Mode getInitial() {

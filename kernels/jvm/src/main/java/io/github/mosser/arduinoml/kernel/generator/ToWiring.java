@@ -30,6 +30,7 @@ public class ToWiring extends Visitor<StringBuffer> {
         w(String.format("// Application name: %s\n", app.getName()));
 
         w("void setup(){");
+        w("  Serial.begin(9600);\n");
         for (Brick brick : app.getBricks()) {
             brick.accept(this);
         }
@@ -46,6 +47,19 @@ public class ToWiring extends Visitor<StringBuffer> {
             w(String.format("  state_%s_%s();", app.getInitial().getInitial().getName(), app.getInitial().getName()));
             w("}");
         }
+
+        w("void watch(String modeName, String stateName) {");
+        w("  String buf=\"\";");
+        wnl("  Serial.println(buf+");
+        for (Brick brick : app.getBricks()) {
+            if (brick instanceof AnalogSensor) {
+                wnl(String.format("\",\"%s+\":\"+%s", brick.getName(), brick.getPin()));
+            }
+        }
+        w("  Serial.println(buf+%s);");
+        w("}");
+
+
     }
 
     @Override

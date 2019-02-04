@@ -7,4 +7,9 @@ public class DigitalSensor extends Sensor {
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }
+
+    @Override
+    public String genrate() {
+        return null;
+    }
 }
