@@ -2,7 +2,7 @@ application verySimpleAlarm
 
 # Declaring bricks
 digital sensor D_button: 9
-digital sensor D_buttonTwo: 10
+analog sensor A_buttonTwo: 1
 actuator ledOne: 11
 actuator buzzer: 12
 
@@ -24,7 +24,7 @@ mode led {
 
 
     # Declaring mode transition
-    D_buttonTwo is HIGH => buzzer
+    A_buttonTwo > 50 => buzzer
 }
 
 -> mode buzzer  {
@@ -42,5 +42,5 @@ mode led {
 
 
     # Declaring mode transition
-    D_buttonTwo is HIGH => led
+    A_buttonTwo < 50 => led
 }

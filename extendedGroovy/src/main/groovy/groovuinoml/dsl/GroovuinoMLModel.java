@@ -58,7 +58,7 @@ public class GroovuinoMLModel {
 	}
 
 	public Transition addSensorCondition(Transition transition,Sensor sensor, SIGNAL signal){
-		SensorCondition condition = new SensorCondition();
+		DigitalSensorCondition condition = new DigitalSensorCondition();
 		condition.setSensor(sensor);
 		condition.setValue(signal);
 		transition.setConditon(condition);
