@@ -144,6 +144,7 @@ public class AnalogSwitch {
         App theSwitch = new App();
         theSwitch.setName("Switch!");
         theSwitch.setBricks(Arrays.asList(button, analog, led, led2));
+        theSwitch.setWatchs(Arrays.asList(button, analog, led, led2));
         theSwitch.setModes(Arrays.asList(A, B));
         theSwitch.setInitial(A);
 
