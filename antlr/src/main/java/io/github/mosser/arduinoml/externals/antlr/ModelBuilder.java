@@ -49,6 +49,9 @@ public class ModelBuilder extends ArduinomlBaseListener {
 
     private State currentState = null;
     private Mode  currentMode  = null;
+    private List<Condition> currentConditions = new ArrayList<>();
+    private Binding currentToBeResolvedLater;
+
 
     /**************************
      ** Listening mechanisms **
@@ -65,7 +68,7 @@ public class ModelBuilder extends ArduinomlBaseListener {
         modeBindings.forEach((bindings) -> {
             ModeTransition transition = new ModeTransition();
             transition.setNext(modes.get(bindings.to));
-            transition.setCondition(bindings.conditions);
+            transition.setConditions(bindings.conditions);
             modes.get(bindings.currentStateOrMode).addModeTransitions(transition);
         });
         this.built = true;
@@ -81,14 +84,19 @@ public class ModelBuilder extends ArduinomlBaseListener {
 
     @Override
     public void exitModee(ArduinomlParser.ModeeContext ctx) {
+        currentToBeResolvedLater.currentStateOrMode = currentMode.getName();
+        modeBindings.add(currentToBeResolvedLater);
         bindings.forEach((binding) ->  {
-            Transition t = new Transition();
+            StateTransition t = new StateTransition();
             t.setConditions(binding.conditions);
             t.setNext(states.get(binding.to));
-            states.get(binding.currentStateOrMode).setTransition(t);
+            states.get(binding.currentStateOrMode).setStateTransition(t);
         });
+
         this.bindings.clear();
         this.states.clear();
+        this.currentConditions.clear();
+        this.currentToBeResolvedLater = null;
         this.theApp.getModes().add(this.currentMode);
         this.currentMode = null;
     }
@@ -138,6 +146,9 @@ public class ModelBuilder extends ArduinomlBaseListener {
 
     @Override
     public void exitState(ArduinomlParser.StateContext ctx) {
+        currentToBeResolvedLater.currentStateOrMode = currentState.getName();
+        bindings.add(currentToBeResolvedLater );
+        this.currentConditions.clear();
         this.currentState = null;
     }
 
@@ -152,35 +163,29 @@ public class ModelBuilder extends ArduinomlBaseListener {
     @Override
     public void enterTransition(ArduinomlParser.TransitionContext ctx) {
         // Creating a placeholder as the next currentStateOrMode might not have been compiled yet.
-        Binding toBeResolvedLater = new Binding();
-        toBeResolvedLater.to      = ctx.next.getText();
-        List<ArduinomlParser.Transition_conditionContext> transitionConditions = ctx.transition_condition();
-        List<Condition> conditions = new ArrayList<>();
-        for (ArduinomlParser.Transition_conditionContext transition: transitionConditions) {
-            ArduinomlParser.Time_transitionContext time_transitionContext = transition.time_transition();
-            ArduinomlParser.Sensor_conditionContext sensorConditionContext = transition.sensor_condition();
-            if (transition.sensor_condition() != null) {
-                SensorCondition sensorCondition = new SensorCondition();
-                sensorCondition.setSensor(sensors.get(sensorConditionContext.trigger.getText()));
-                sensorCondition.setValue(SIGNAL.valueOf(sensorConditionContext.value.getText()));
-                conditions.add(sensorCondition);
-            } else {
-                TimeCondition timeCondition = new TimeCondition();
-                timeCondition.setTime(Integer.parseInt(time_transitionContext.time.getText()));
-                conditions.add(timeCondition);
-            }
-        }
-
-        toBeResolvedLater.conditions = conditions;
-        if (currentState != null) {
-            toBeResolvedLater.currentStateOrMode = currentState.getName();
-            bindings.add(toBeResolvedLater);
-        } else {
-            toBeResolvedLater.currentStateOrMode = currentMode.getName();
-            modeBindings.add(toBeResolvedLater);
-        }
+        currentToBeResolvedLater = new Binding();
+        currentToBeResolvedLater .to = ctx.next.getText();
     }
 
+    @Override
+    public void exitTransition(ArduinomlParser.TransitionContext ctx) {
+        currentToBeResolvedLater.conditions = new ArrayList<>(currentConditions);
+    }
+
+    @Override
+    public void enterSensor_condition(ArduinomlParser.Sensor_conditionContext ctx) {
+        SensorCondition sensorCondition = new SensorCondition();
+        sensorCondition.setSensor(sensors.get(ctx.trigger.getText()));
+        sensorCondition.setValue(SIGNAL.valueOf(ctx.value.getText()));
+        currentConditions.add(sensorCondition);
+    }
+
+    @Override
+    public void enterTime_transition(ArduinomlParser.Time_transitionContext ctx) {
+        TimeCondition timeCondition = new TimeCondition();
+        timeCondition.setTime(Integer.parseInt(ctx.time.getText()));
+        currentConditions.add(timeCondition);
+    }
 
     @Override
     public void enterInitial(ArduinomlParser.InitialContext ctx) {
