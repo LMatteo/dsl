@@ -4,25 +4,22 @@ import io.github.mosser.arduinoml.kernel.App;
 import io.github.mosser.arduinoml.kernel.behavioral.*;
 import io.github.mosser.arduinoml.kernel.generator.ToWiring;
 import io.github.mosser.arduinoml.kernel.generator.Visitor;
-import io.github.mosser.arduinoml.kernel.structural.Actuator;
-import io.github.mosser.arduinoml.kernel.structural.DigitalSensor;
-import io.github.mosser.arduinoml.kernel.structural.SIGNAL;
-import io.github.mosser.arduinoml.kernel.structural.Sensor;
+import io.github.mosser.arduinoml.kernel.structural.*;
 
 import java.util.Arrays;
 
-public class Switch {
+public class AnalogSwitch {
 
     public static void main(String[] args) {
 
         // Declaring elementary bricks
+        AnalogSensor analog = new AnalogSensor();
+        analog.setName("analog");
+        analog.setPin(4);
+
         DigitalSensor button = new DigitalSensor();
         button.setName("button");
         button.setPin(9);
-
-        DigitalSensor button2 = new DigitalSensor();
-        button2.setName("button2");
-        button2.setPin(10);
 
         Actuator led = new Actuator();
         led.setName("LED");
@@ -115,17 +112,19 @@ public class Switch {
         // Creating mode transitions
         ModeTransition A2B = new ModeTransition();
         A2B.setNext(B);
-        DigitalSensorCondition digitalSensorCondition5 = new DigitalSensorCondition();
-        digitalSensorCondition5.setSensor(button2);
-        digitalSensorCondition5.setValue(SIGNAL.HIGH);
-        A2B.setConditon(digitalSensorCondition5);
+        AnalogSensorCondition analogSensorCondition = new AnalogSensorCondition();
+        analogSensorCondition.setSensor(analog);
+        analogSensorCondition.setGreater(true);
+        analogSensorCondition.setValue(500);
+        A2B.setConditon(analogSensorCondition);
 
         ModeTransition B2A = new ModeTransition();
         B2A.setNext(A);
-        DigitalSensorCondition digitalSensorCondition6 = new DigitalSensorCondition();
-        digitalSensorCondition6.setSensor(button2);
-        digitalSensorCondition6.setValue(SIGNAL.LOW);
-        B2A.setConditon(digitalSensorCondition6);
+        AnalogSensorCondition analogSensorCondition2 = new AnalogSensorCondition();
+        analogSensorCondition2.setSensor(analog);
+        analogSensorCondition2.setGreater(false);
+        analogSensorCondition2.setValue(500);
+        B2A.setConditon(analogSensorCondition2);
 
         // Binding transitions to modes
         A.addModeTransitions(A2B);
@@ -144,7 +143,7 @@ public class Switch {
         // Building the App
         App theSwitch = new App();
         theSwitch.setName("Switch!");
-        theSwitch.setBricks(Arrays.asList(button, button2, led, led2));
+        theSwitch.setBricks(Arrays.asList(button, analog, led, led2));
         theSwitch.setModes(Arrays.asList(A, B));
         theSwitch.setInitial(A);
 

@@ -4,8 +4,6 @@ import io.github.mosser.arduinoml.kernel.App;
 import io.github.mosser.arduinoml.kernel.behavioral.*;
 import io.github.mosser.arduinoml.kernel.structural.*;
 
-import java.util.Map;
-
 /**
  * Quick and dirty visitor to support the generation of Wiring code
  */
@@ -123,8 +121,18 @@ public class ToWiring extends Visitor<StringBuffer> {
     }
 
     @Override
-    public void visit(SensorCondition sensorCondition) {
-        wnl(String.format(" digitalRead(%d) == %s", sensorCondition.getSensor().getPin(), sensorCondition.getValue()));
+    public void visit(DigitalSensorCondition digitalSensorCondition) {
+        wnl(String.format(" digitalRead(%d) == %s", digitalSensorCondition.getSensor().getPin(), digitalSensorCondition.getValue()));
+    }
+
+    @Override
+    public void visit(AnalogSensorCondition analogSensorCondition) {
+        if (analogSensorCondition.isGreater()) {
+            wnl(String.format(" analogRead(%d) >= %s", analogSensorCondition.getSensor().getPin(), analogSensorCondition.getValue()));
+        } else {
+            wnl(String.format(" analogRead(%d) < %s", analogSensorCondition.getSensor().getPin(), analogSensorCondition.getValue()));
+        }
+
     }
 
     @Override

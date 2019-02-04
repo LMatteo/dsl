@@ -1,18 +1,19 @@
 package io.github.mosser.arduinoml.kernel.behavioral;
 
 import io.github.mosser.arduinoml.kernel.generator.Visitor;
+import io.github.mosser.arduinoml.kernel.structural.DigitalSensor;
 import io.github.mosser.arduinoml.kernel.structural.SIGNAL;
 import io.github.mosser.arduinoml.kernel.structural.Sensor;
 
-public class SensorCondition implements Condition {
-    private Sensor sensor;
+public class DigitalSensorCondition implements Condition {
+    private DigitalSensor sensor;
     private SIGNAL value;
 
     public Sensor getSensor() {
         return sensor;
     }
 
-    public void setSensor(Sensor sensor) {
+    public void setSensor(DigitalSensor sensor) {
         this.sensor = sensor;
     }
 

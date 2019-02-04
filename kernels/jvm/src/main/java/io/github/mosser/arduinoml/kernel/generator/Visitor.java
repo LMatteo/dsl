@@ -23,7 +23,9 @@ public abstract class Visitor<T> {
 
     public abstract void visit(TimeCondition timeCondition);
 
-    public abstract void visit(SensorCondition sensorCondition);
+    public abstract void visit(DigitalSensorCondition digitalSensorCondition);
+
+    public abstract void visit(AnalogSensorCondition analogSensorCondition);
 
     public abstract void visit(Actuator actuator);
 
