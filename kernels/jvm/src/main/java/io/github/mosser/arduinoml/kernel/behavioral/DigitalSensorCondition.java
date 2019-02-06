@@ -5,7 +5,7 @@ import io.github.mosser.arduinoml.kernel.structural.DigitalSensor;
 import io.github.mosser.arduinoml.kernel.structural.SIGNAL;
 import io.github.mosser.arduinoml.kernel.structural.Sensor;
 
-public class DigitalSensorCondition implements Condition {
+public class DigitalSensorCondition extends SensorCondition implements Condition {
     private DigitalSensor sensor;
     private SIGNAL value;
 

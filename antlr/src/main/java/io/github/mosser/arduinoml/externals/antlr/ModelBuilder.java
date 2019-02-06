@@ -5,9 +5,7 @@ import io.github.mosser.arduinoml.externals.antlr.grammar.*;
 
 import io.github.mosser.arduinoml.kernel.App;
 import io.github.mosser.arduinoml.kernel.behavioral.*;
-import io.github.mosser.arduinoml.kernel.structural.Actuator;
-import io.github.mosser.arduinoml.kernel.structural.SIGNAL;
-import io.github.mosser.arduinoml.kernel.structural.Sensor;
+import io.github.mosser.arduinoml.kernel.structural.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -113,15 +111,25 @@ public class ModelBuilder extends ArduinomlBaseListener {
         }
     }
 
-    @Override
-    public void enterSensor(ArduinomlParser.SensorContext ctx) {
-        Sensor sensor = new Sensor();
-        sensor.setName(ctx.location().id.getText());
-        int pinNumber = Integer.parseInt(ctx.location().port.getText());
+
+    private void initSensor(Sensor sensor, String name, int pinNumber) {
+        sensor.setName(name);
         checkPinNumber(pinNumber);
         sensor.setPin(pinNumber);
         this.theApp.getBricks().add(sensor);
         sensors.put(sensor.getName(), sensor);
+    }
+
+    @Override
+    public void enterDigital_sensor(ArduinomlParser.Digital_sensorContext ctx) {
+        DigitalSensor digitalSensor = new DigitalSensor();
+        initSensor(digitalSensor, ctx.id.getText(), Integer.parseInt(ctx.port.getText()));
+    }
+
+    @Override
+    public void enterAnalog_sensor(ArduinomlParser.Analog_sensorContext ctx) {
+        AnalogSensor analogSensor = new AnalogSensor();
+        initSensor(analogSensor, ctx.id.getText(), Integer.parseInt(ctx.port.getText()));
     }
 
     @Override
@@ -172,12 +180,28 @@ public class ModelBuilder extends ArduinomlBaseListener {
         currentToBeResolvedLater.conditions = new ArrayList<>(currentConditions);
     }
 
+
     @Override
-    public void enterSensor_condition(ArduinomlParser.Sensor_conditionContext ctx) {
-        SensorCondition sensorCondition = new SensorCondition();
-        sensorCondition.setSensor(sensors.get(ctx.trigger.getText()));
+    public void enterDigital_sensor_condition(ArduinomlParser.Digital_sensor_conditionContext ctx) {
+        DigitalSensorCondition sensorCondition = new DigitalSensorCondition();
+        sensorCondition.setSensor((DigitalSensor) sensors.get(ctx.trigger.getText()));
         sensorCondition.setValue(SIGNAL.valueOf(ctx.value.getText()));
         currentConditions.add(sensorCondition);
+    }
+
+    @Override
+    public void enterAnalog_sensor_condition(ArduinomlParser.Analog_sensor_conditionContext ctx) {
+        AnalogSensorCondition sensorCondition = new AnalogSensorCondition();
+        sensorCondition.setSensor((AnalogSensor) sensors.get(ctx.trigger.getText()));
+        int sensorValue = Integer.parseInt(ctx.value.getText());
+        if (sensorValue < 0 || sensorValue > 100) {
+            throw new RuntimeException("Sensor condition value \"" + sensorValue + "\"should be between 0 and 100");
+        }
+        sensorValue = Math.round(((float)sensorValue / (float)100) * 1024) - 1;
+        sensorCondition.setValue(sensorValue);
+        sensorCondition.setGreater(ctx.operator.getText().charAt(0) == '>');
+        currentConditions.add(sensorCondition);
+        super.enterAnalog_sensor_condition(ctx);
     }
 
     @Override

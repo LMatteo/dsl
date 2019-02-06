@@ -79,31 +79,31 @@ public class Switch {
         // Creating state transitions
         StateTransition on2off_A = new StateTransition();
         on2off_A.setNext(off_A);
-        DigitalSensorCondition digitalSensorCondition1 = new DigitalSensorCondition();
-        digitalSensorCondition1.setSensor(button);
-        digitalSensorCondition1.setValue(SIGNAL.LOW);
-        on2off_A.setConditon(digitalSensorCondition1);
+        DigitalSensorCondition sensorCondition1 = new DigitalSensorCondition();
+        sensorCondition1.setSensor(button);
+        sensorCondition1.setValue(SIGNAL.LOW);
+        on2off_A.setConditon(sensorCondition1);
 
         StateTransition off2on_A = new StateTransition();
         off2on_A.setNext(on_A);
-        DigitalSensorCondition digitalSensorCondition2 = new DigitalSensorCondition();
-        digitalSensorCondition2.setSensor(button);
-        digitalSensorCondition2.setValue(SIGNAL.HIGH);
-        off2on_A.setConditon(digitalSensorCondition2);
+        DigitalSensorCondition sensorCondition2 = new DigitalSensorCondition();
+        sensorCondition2.setSensor(button);
+        sensorCondition2.setValue(SIGNAL.HIGH);
+        off2on_A.setConditon(sensorCondition2);
 
         StateTransition on2off_B = new StateTransition();
         on2off_B.setNext(off_B);
-        DigitalSensorCondition digitalSensorCondition3 = new DigitalSensorCondition();
-        digitalSensorCondition3.setSensor(button);
-        digitalSensorCondition3.setValue(SIGNAL.LOW);
-        on2off_B.setConditon(digitalSensorCondition3);
+        DigitalSensorCondition sensorCondition3 = new DigitalSensorCondition();
+        sensorCondition3.setSensor(button);
+        sensorCondition3.setValue(SIGNAL.LOW);
+        on2off_B.setConditon(sensorCondition3);
 
         StateTransition off2on_B = new StateTransition();
         off2on_B.setNext(on_B);
-        DigitalSensorCondition digitalSensorCondition4 = new DigitalSensorCondition();
-        digitalSensorCondition4.setSensor(button);
-        digitalSensorCondition4.setValue(SIGNAL.HIGH);
-        off2on_B.setConditon(digitalSensorCondition4);
+        DigitalSensorCondition sensorCondition4 = new DigitalSensorCondition();
+        sensorCondition4.setSensor(button);
+        sensorCondition4.setValue(SIGNAL.HIGH);
+        off2on_B.setConditon(sensorCondition4);
 
         // Binding transitions to states
         on_A.setStateTransition(on2off_A);
@@ -115,17 +115,17 @@ public class Switch {
         // Creating mode transitions
         ModeTransition A2B = new ModeTransition();
         A2B.setNext(B);
-        DigitalSensorCondition digitalSensorCondition5 = new DigitalSensorCondition();
-        digitalSensorCondition5.setSensor(button2);
-        digitalSensorCondition5.setValue(SIGNAL.HIGH);
-        A2B.setConditon(digitalSensorCondition5);
+        DigitalSensorCondition sensorCondition5 = new DigitalSensorCondition();
+        sensorCondition5.setSensor(button2);
+        sensorCondition5.setValue(SIGNAL.HIGH);
+        A2B.setConditon(sensorCondition5);
 
         ModeTransition B2A = new ModeTransition();
         B2A.setNext(A);
-        DigitalSensorCondition digitalSensorCondition6 = new DigitalSensorCondition();
-        digitalSensorCondition6.setSensor(button2);
-        digitalSensorCondition6.setValue(SIGNAL.LOW);
-        B2A.setConditon(digitalSensorCondition6);
+        DigitalSensorCondition sensorCondition6 = new DigitalSensorCondition();
+        sensorCondition6.setSensor(button2);
+        sensorCondition6.setValue(SIGNAL.LOW);
+        B2A.setConditon(sensorCondition6);
 
         // Binding transitions to modes
         A.addModeTransitions(A2B);
