@@ -12,9 +12,10 @@ declaration     :   'application' name=IDENTIFIER;
 
 bricks             :   (sensor|actuator)+;
     sensor         :   digital_sensor | analog_sensor ;
-    digital_sensor :   'digital sensor'  id=DIGITAL_IDENTIFIER ':' port=NUMBER ;
-    analog_sensor  :   'analog sensor' id=ANALOG_IDENTIFIER ':' port=NUMBER ;
-    actuator       :   'actuator' location ;
+    digital_sensor :   'digital sensor'  id=DIGITAL_IDENTIFIER ':' port=NUMBER watch? ;
+    analog_sensor  :   'analog sensor' id=ANALOG_IDENTIFIER ':' port=NUMBER watch?;
+    watch          :   'watch';
+    actuator       :   'actuator' location watch?;
     location       :   id=IDENTIFIER ':' port=NUMBER;
 
 

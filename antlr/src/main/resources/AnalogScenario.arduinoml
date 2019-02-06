@@ -1,9 +1,9 @@
 application verySimpleAlarm
 
 # Declaring bricks
-digital sensor D_button: 9
-analog sensor A_buttonTwo: 1
-actuator ledOne: 11
+digital sensor D_button: 9 watch
+analog sensor A_buttonTwo: 1 watch
+actuator ledOne: 11 watch
 actuator buzzer: 12
 
 

@@ -36,6 +36,7 @@ public class ModelBuilder extends ArduinomlBaseListener {
     private Map<String, State>        states       = new HashMap<>();
     private List<Binding>             bindings     = new ArrayList<>();
     private List<Binding>             modeBindings = new ArrayList<>();
+    private List<Watchable>           watchables   = new ArrayList<>();
 
 
     private class Binding { // used to support currentStateOrMode resolution for transitions
@@ -69,6 +70,7 @@ public class ModelBuilder extends ArduinomlBaseListener {
             transition.setConditions(bindings.conditions);
             modes.get(bindings.currentStateOrMode).addModeTransitions(transition);
         });
+        this.theApp.setWatchs(this.watchables);
         this.built = true;
     }
 
@@ -112,24 +114,27 @@ public class ModelBuilder extends ArduinomlBaseListener {
     }
 
 
-    private void initSensor(Sensor sensor, String name, int pinNumber) {
+    private void initSensor(Sensor sensor, String name, int pinNumber, boolean isWatched) {
         sensor.setName(name);
         checkPinNumber(pinNumber);
         sensor.setPin(pinNumber);
         this.theApp.getBricks().add(sensor);
         sensors.put(sensor.getName(), sensor);
+        if (isWatched) {
+            this.watchables.add(sensor);
+        }
     }
 
     @Override
     public void enterDigital_sensor(ArduinomlParser.Digital_sensorContext ctx) {
         DigitalSensor digitalSensor = new DigitalSensor();
-        initSensor(digitalSensor, ctx.id.getText(), Integer.parseInt(ctx.port.getText()));
+        initSensor(digitalSensor, ctx.id.getText(), Integer.parseInt(ctx.port.getText()), ctx.watch() != null);
     }
 
     @Override
     public void enterAnalog_sensor(ArduinomlParser.Analog_sensorContext ctx) {
         AnalogSensor analogSensor = new AnalogSensor();
-        initSensor(analogSensor, ctx.id.getText(), Integer.parseInt(ctx.port.getText()));
+        initSensor(analogSensor, ctx.id.getText(), Integer.parseInt(ctx.port.getText()), ctx.watch() != null);
     }
 
     @Override
@@ -141,6 +146,9 @@ public class ModelBuilder extends ArduinomlBaseListener {
         actuator.setPin(pintNumber);
         this.theApp.getBricks().add(actuator);
         actuators.put(actuator.getName(), actuator);
+        if (ctx.watch() != null) {
+            this.watchables.add(actuator);
+        }
     }
 
     @Override
