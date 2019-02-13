@@ -29,7 +29,7 @@ public class ToWiring extends Visitor<StringBuffer> {
         w("// Wiring code generated from an ArduinoML model");
         w(String.format("// Application name: %s\n", app.getName()));
 
-        wnl("#define watch(modeName,stateName) Serial.print(\"Mode:\");Serial.print(modeName);Serial.print(\",State:\");Serial.print(stateName);");
+        wnl("#define watch(modeName,stateName) Serial.print(\"Time:\");Serial.print(millis());Serial.print(\"Mode:\");Serial.print(modeName);Serial.print(\",State:\");Serial.print(stateName);");
         for (Watchable watchable : app.getWatchs()) {
             wnl(watchable.genrate());
         }
