@@ -50,11 +50,11 @@ public class ToWiring extends Visitor<StringBuffer> {
 
         w("void watch(String modeName, String stateName) {");
         w("  String buf=\"Mode:\"+modeName+\",State:\"+stateName;");
-        wnl("  Serial.println(buf");
+        wnl("  Serial.println(F(buf");
         for (Watchable watchable : app.getWatchs()) {
             wnl(watchable.genrate());
         }
-        w(");");
+        w("));");
         w("  delay(100);");
         w("}");
 
