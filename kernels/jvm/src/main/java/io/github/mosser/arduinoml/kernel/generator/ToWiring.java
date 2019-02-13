@@ -55,10 +55,7 @@ public class ToWiring extends Visitor<StringBuffer> {
             wnl(watchable.genrate());
         }
         w("));");
-        w("  delay(100);");
         w("}");
-
-
     }
 
     @Override
