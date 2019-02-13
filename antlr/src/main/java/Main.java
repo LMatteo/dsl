@@ -4,6 +4,7 @@ import io.github.mosser.arduinoml.externals.antlr.grammar.*;
 import io.github.mosser.arduinoml.kernel.App;
 import io.github.mosser.arduinoml.kernel.generator.ToWiring;
 import io.github.mosser.arduinoml.kernel.generator.Visitor;
+import io.github.mosser.arduinoml.kernel.generator.config.ConfigGenerator;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -53,6 +54,9 @@ public class Main {
         Visitor codeGenerator = new ToWiring();
         theApp.accept(codeGenerator);
         System.out.println(codeGenerator.getResult());
+        ConfigGenerator configGenerator = new ConfigGenerator();
+        System.out.println(configGenerator.generateConfig(theApp));
+
     }
 
 }
