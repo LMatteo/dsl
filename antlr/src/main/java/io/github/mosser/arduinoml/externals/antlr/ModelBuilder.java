@@ -66,7 +66,11 @@ public class ModelBuilder extends ArduinomlBaseListener {
         // Resolving states in transitions
         modeBindings.forEach((bindings) -> {
             ModeTransition transition = new ModeTransition();
-            transition.setNext(modes.get(bindings.to));
+            Mode next = modes.get(bindings.to);
+            if (next == null) {
+                throw new RuntimeException("Error in mode transition : Unknown next mode : " + bindings.to);
+            }
+            transition.setNext(next);
             transition.setConditions(bindings.conditions);
             modes.get(bindings.currentStateOrMode).addModeTransitions(transition);
         });
@@ -89,6 +93,10 @@ public class ModelBuilder extends ArduinomlBaseListener {
         bindings.forEach((binding) ->  {
             StateTransition t = new StateTransition();
             t.setConditions(binding.conditions);
+            State next = states.get(binding.to);
+            if (next == null) {
+                throw new RuntimeException("Error in state transition : Unknown next state : " + binding.to);
+            }
             t.setNext(states.get(binding.to));
             states.get(binding.currentStateOrMode).setStateTransition(t);
         });
