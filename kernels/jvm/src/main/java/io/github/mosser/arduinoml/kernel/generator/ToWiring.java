@@ -49,14 +49,13 @@ public class ToWiring extends Visitor<StringBuffer> {
         }
 
         w("void watch(String modeName, String stateName) {");
-        w("  String buf=\"\";");
-        wnl("  Serial.println(buf+");
-        for (Brick brick : app.getBricks()) {
-            if (brick instanceof AnalogSensor) {
-                wnl(String.format("\",\"%s+\":\"+%s", brick.getName(), brick.getPin()));
-            }
+        w("  String buf=\"Mode:\"+modeName+\",State:\"+stateName;");
+        wnl("  Serial.println(buf");
+        for (Watchable watchable : app.getWatchs()) {
+            wnl(watchable.genrate());
         }
-        w("  Serial.println(buf+%s);");
+        w(");");
+        w("  delay(100);");
         w("}");
 
 
@@ -76,6 +75,7 @@ public class ToWiring extends Visitor<StringBuffer> {
     @Override
     public void visit(State state) {
         w(String.format("void state_%s_%s() {", state.getName(), ((Mode) context.get(CURRENT_MODE)).getName()));
+        w(String.format("  watch(\"%s\",\"%s\");", ((Mode) context.get(CURRENT_MODE)).getName(), state.getName()));
         for (Action action : state.getActions()) {
             action.accept(this);
         }
