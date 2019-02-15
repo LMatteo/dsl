@@ -10,6 +10,6 @@ public class AnalogSensor extends Sensor {
 
     @Override
     public String genrate() {
-        return String.format("+\",%s:\"+analogRead(%s)", getName(), getPin());
+        return String.format("Serial.print(\",%s:\");Serial.print(analogRead(%s));", getName(), getPin());
     }
 }

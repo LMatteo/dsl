@@ -10,6 +10,6 @@ public class DigitalSensor extends Sensor {
 
     @Override
     public String genrate() {
-        return String.format("+\",%s:\"+digitalRead(%s)", getName(), getPin());
+        return String.format("Serial.print(\",%s:\");Serial.print(digitalRead(%s));", getName(), getPin());
     }
 }

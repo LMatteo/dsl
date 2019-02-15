@@ -29,6 +29,13 @@ public class ToWiring extends Visitor<StringBuffer> {
         w("// Wiring code generated from an ArduinoML model");
         w(String.format("// Application name: %s\n", app.getName()));
 
+        wnl("#define watch(modeName,stateName) Serial.print(\"Time:\");Serial.print(millis());Serial.print(\"Mode:\");Serial.print(modeName);Serial.print(\",State:\");Serial.print(stateName);");
+        for (Watchable watchable : app.getWatchs()) {
+            wnl(watchable.genrate());
+        }
+        wnl("Serial.println(\"\");");
+        w("");
+
         w("void setup(){");
         w("  Serial.begin(9600);\n");
         for (Brick brick : app.getBricks()) {
@@ -47,18 +54,6 @@ public class ToWiring extends Visitor<StringBuffer> {
             w(String.format("  state_%s_%s();", app.getInitial().getInitial().getName(), app.getInitial().getName()));
             w("}");
         }
-
-        w("void watch(String modeName, String stateName) {");
-        w("  String buf=\"Mode:\"+modeName+\",State:\"+stateName;");
-        wnl("  Serial.println(buf");
-        for (Watchable watchable : app.getWatchs()) {
-            wnl(watchable.genrate());
-        }
-        w(");");
-        w("  delay(100);");
-        w("}");
-
-
     }
 
     @Override
