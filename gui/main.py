@@ -1,27 +1,18 @@
 from Display import Display
-from UpdateThread import UpdateThread
+from DataUpdater import DataUpdater
 import time
 import threading
 
-
-def update():
-    i =0
-    while True :
-        if i % 2 == 0 :
-            data.append(1)
-        else :
-            data.append(0)
-        time.sleep(1)
-
 mods = dict()
 mods['init'] = ['in','off']
-sensors = ['led','button']
-
+sensors = ['led']
+updater = DataUpdater()
 data = []
-thr = threading.Thread(target=update)
-thr.start()
 display = Display(mods,sensors)
-display.init(data,5000)
+updater.start()
+display.init(updater.getData(),1000)
+updater.stop()
+updater.join()
 print("finished")
 
 
