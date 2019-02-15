@@ -3,7 +3,7 @@ package io.github.mosser.arduinoml.kernel.structural;
 import io.github.mosser.arduinoml.kernel.NamedElement;
 import io.github.mosser.arduinoml.kernel.generator.Visitable;
 
-public abstract class Brick implements NamedElement, Visitable {
+public abstract class Brick implements NamedElement, Visitable, Watchable {
 
 	private String name;
 	private int pin;
