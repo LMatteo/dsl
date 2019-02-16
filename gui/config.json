@@ -1,0 +1,2 @@
+{"modes":{"buzzer":["on","off"],"led":["on","off"]},
+  "watchables":["D_button","A_buttonTwo","ledOne"]}
