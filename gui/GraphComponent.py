@@ -2,18 +2,23 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
+windowSize = 20000
 
 class GraphComponent:
-    def __init__(self,master):
-        fig = Figure()
-        self.sub = fig.add_subplot(111)
-        self.sub.set_ylim(-0.1,1.1)
+    def __init__(self,master,name):
+        self.fig = Figure()
 
+        self.fig.suptitle(name)
+        self.sub = self.fig.add_subplot(111)
         self.xdata = []
         self.ydata = []
         line, = self.sub.plot(self.xdata, self.ydata,'-r')
+        self.sub.set_ylim(-0.1,1.1)
+        self.sub.set_xlim(0,windowSize)
         self.line = line
-        self.canvas = FigureCanvasTkAgg(fig, master=master)
+        self.fig.axes[0].set_xlabel('time(ms)')
+        self.fig.axes[0].set_ylabel('value')
+        self.canvas = FigureCanvasTkAgg(self.fig, master=master)
         self.canvas.draw()
 
     def getWidget(self):
@@ -28,14 +33,14 @@ class GraphComponent:
         else :
             self.ydata = self.ydata[0:len(self.xdata)]
 
-        self.line.set_data(self.xdata, self.ydata)
-        #self.line.set_ydata(ydata.append(1))
-        maxlim = self.xdata[len(self.xdata)-1]
-        lowerlim = maxlim-10000 if maxlim > 10000 else 0
 
-        self.sub.set_xlim(lowerlim, maxlim)
+        maxlim = self.xdata[len(self.xdata)-1] if self.xdata[len(self.xdata)-1] > windowSize else windowSize
+        lowerlim = maxlim-windowSize if maxlim > windowSize else 0
+        self.sub.set_xlim(lowerlim,maxlim)
+        self.line.set_data(self.xdata, self.ydata)
         self.canvas.draw()
         self.canvas.flush_events()
+
 
     @staticmethod
     def name():

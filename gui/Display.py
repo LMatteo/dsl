@@ -26,7 +26,7 @@ class Display:
         self.components = dict()
         graphPanel = PanedWindow(panel, orient=HORIZONTAL)
         for sensor in configs["watchables"]:
-            component = GraphComponent(graphPanel)
+            component = GraphComponent(graphPanel,sensor)
             self.components[sensor] = component
             graphPanel.add(component.getWidget())
 
