@@ -1,10 +1,10 @@
 application verySimpleAlarm
 
 # Declaring bricks
-digital sensor D_button: 9 watch
-analog sensor A_buttonTwo: 1 watch
-actuator ledOne: 11 watch
-actuator buzzer: 12
+digital sensor D_button: 9 watch graph blue  graphOne
+analog sensor A_buttonTwo: 1 watch graph blue  graphOne
+actuator ledOne: 11 watch text
+actuator buzzer: 12 watch text
 
 
 # Declaring modes
@@ -29,7 +29,7 @@ mode led {
 
 -> mode buzzer  {
     # Declaring states
-    on {
+    onBuzzer {
         buzzer <= HIGH
         D_button is LOW => off
     }
@@ -37,7 +37,7 @@ mode led {
     -> off {
         ledOne <= LOW
         buzzer <= LOW
-        D_button is HIGH => on
+        D_button is HIGH => onBuzzer
     }
 
 

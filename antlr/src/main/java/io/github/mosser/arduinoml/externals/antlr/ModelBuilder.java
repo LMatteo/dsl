@@ -5,6 +5,8 @@ import io.github.mosser.arduinoml.externals.antlr.grammar.*;
 
 import io.github.mosser.arduinoml.kernel.App;
 import io.github.mosser.arduinoml.kernel.behavioral.*;
+import io.github.mosser.arduinoml.kernel.generator.config.GraphConfig;
+import io.github.mosser.arduinoml.kernel.generator.config.TextConfig;
 import io.github.mosser.arduinoml.kernel.structural.*;
 
 import java.util.ArrayList;
@@ -48,6 +50,7 @@ public class ModelBuilder extends ArduinomlBaseListener {
 
     private State currentState = null;
     private Mode  currentMode  = null;
+    private Watchable currentWatchable = null;
     private List<Condition> currentConditions = new ArrayList<>();
     private Binding currentToBeResolvedLater;
 
@@ -66,7 +69,11 @@ public class ModelBuilder extends ArduinomlBaseListener {
         // Resolving states in transitions
         modeBindings.forEach((bindings) -> {
             ModeTransition transition = new ModeTransition();
-            transition.setNext(modes.get(bindings.to));
+            Mode next = modes.get(bindings.to);
+            if (next == null) {
+                throw new RuntimeException("Error in mode transition : Unknown next mode : " + bindings.to);
+            }
+            transition.setNext(next);
             transition.setConditions(bindings.conditions);
             modes.get(bindings.currentStateOrMode).addModeTransitions(transition);
         });
@@ -89,6 +96,10 @@ public class ModelBuilder extends ArduinomlBaseListener {
         bindings.forEach((binding) ->  {
             StateTransition t = new StateTransition();
             t.setConditions(binding.conditions);
+            State next = states.get(binding.to);
+            if (next == null) {
+                throw new RuntimeException("Error in state transition : Unknown next state : " + binding.to);
+            }
             t.setNext(states.get(binding.to));
             states.get(binding.currentStateOrMode).setStateTransition(t);
         });
@@ -121,8 +132,28 @@ public class ModelBuilder extends ArduinomlBaseListener {
         this.theApp.getBricks().add(sensor);
         sensors.put(sensor.getName(), sensor);
         if (isWatched) {
-            this.watchables.add(sensor);
+            this.currentWatchable = sensor;
         }
+    }
+
+    @Override
+    public void enterGraph(ArduinomlParser.GraphContext ctx) {
+        GraphConfig config = new GraphConfig();
+        config.setColor(ctx.color.getText());
+        config.setGraphId(ctx.graph_name.getText());
+        config.setBrickId(((Brick)this.currentWatchable).getName());
+        this.currentWatchable.setConfig(config);
+        this.watchables.add(this.currentWatchable);
+        this.currentWatchable = null;
+    }
+
+    @Override
+    public void enterText(ArduinomlParser.TextContext ctx) {
+        TextConfig config = new TextConfig();
+        config.setBrickId(((Brick)this.currentWatchable).getName());
+        this.currentWatchable.setConfig(config);
+        this.watchables.add(this.currentWatchable);
+        this.currentWatchable = null;
     }
 
     @Override
@@ -147,7 +178,7 @@ public class ModelBuilder extends ArduinomlBaseListener {
         this.theApp.getBricks().add(actuator);
         actuators.put(actuator.getName(), actuator);
         if (ctx.watch() != null) {
-            this.watchables.add(actuator);
+            this.currentWatchable = actuator;
         }
     }
 

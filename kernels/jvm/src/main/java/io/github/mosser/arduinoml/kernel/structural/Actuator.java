@@ -10,7 +10,7 @@ public class Actuator extends Brick {
     }
 
     @Override
-    public String genrate() {
+    public String generate() {
         return String.format("Serial.print(\",%s:\");Serial.print(digitalRead(%s));", getName(), getPin());
     }
 }

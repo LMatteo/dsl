@@ -31,7 +31,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 
         wnl("#define watch(modeName,stateName) Serial.print(\"Time:\");Serial.print(millis());Serial.print(\",Mode:\");Serial.print(modeName);Serial.print(\",State:\");Serial.print(stateName);");
         for (Watchable watchable : app.getWatchs()) {
-            wnl(watchable.genrate());
+            wnl(watchable.generate());
         }
         wnl("Serial.println(\"\");");
         w("");
