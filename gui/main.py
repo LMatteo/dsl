@@ -1,19 +1,24 @@
 from Display import Display
 from DataUpdater import DataUpdater
-import time
-import threading
+import json
 
-mods = dict()
-mods['init'] = ['in','off']
-sensors = ['led']
-updater = DataUpdater()
+
+def getConfig(configFileName):
+    file = open(configFileName,'r')
+    config = json.loads(file.read())
+    file.close()
+    return config
+
+config = getConfig('config.json')
+display = Display(config)
+updater = DataUpdater("/dev/ttyACM0",config)
 data = []
-display = Display(mods,sensors)
 updater.start()
-display.init(updater.getData(),1000)
+display.init(updater.getData(),100)
 updater.stop()
 updater.join()
 print("finished")
+
 
 
 
