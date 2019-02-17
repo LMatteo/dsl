@@ -2,6 +2,7 @@ package io.github.mosser.arduinoml.kernel.generator.config;
 
 import com.google.gson.Gson;
 import io.github.mosser.arduinoml.kernel.App;
+import io.github.mosser.arduinoml.kernel.generator.config.json.Config;
 
 public class ConfigGenerator {
 
