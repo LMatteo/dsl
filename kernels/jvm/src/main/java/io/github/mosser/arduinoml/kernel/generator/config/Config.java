@@ -11,7 +11,7 @@ import java.util.Map;
 public class Config {
 
     public Map<String, List<String>> modes = new HashMap<>();
-    public List<String> watchables = new ArrayList<>();
+    public List<BrickConfig> watchables = new ArrayList<>();
 
     public void addState(String modeName, String stateName) {
         List<String> states = modes.get(modeName);
@@ -23,7 +23,7 @@ public class Config {
     }
 
     public void addWatchable(Watchable watchable) {
-        this.watchables.add(((Brick)watchable).getName());
+        this.watchables.add(watchable.getConfig());
     }
 
 

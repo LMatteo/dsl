@@ -14,7 +14,9 @@ bricks             :   (sensor|actuator)+;
     sensor         :   digital_sensor | analog_sensor ;
     digital_sensor :   'digital sensor'  id=DIGITAL_IDENTIFIER ':' port=NUMBER watch? ;
     analog_sensor  :   'analog sensor' id=ANALOG_IDENTIFIER ':' port=NUMBER watch?;
-    watch          :   'watch';
+    watch          :   'watch' (graph | text);
+    graph          :   'graph' color=GRAPH_COLOR graph_name=IDENTIFIER;
+    text           :   'text';
     actuator       :   'actuator' location watch?;
     location       :   id=IDENTIFIER ':' port=NUMBER;
 
@@ -45,9 +47,9 @@ NUMBER              :   DIGIT (DIGIT|'0')*;
 COMPARISON_OPERATOR :   '>' | '<';
 DIGITAL_IDENTIFIER  :   'D_'IDENTIFIER;
 ANALOG_IDENTIFIER   :   'A_'IDENTIFIER;
+GRAPH_COLOR         :   'blue' | 'red' | 'cyan' | 'magenta' | 'yellow' | 'black';
 IDENTIFIER          :   LOWERCASE (LOWERCASE|UPPERCASE)+;
 SIGNAL              :   'HIGH' | 'LOW';
-
 
 /*************
  ** Helpers **
