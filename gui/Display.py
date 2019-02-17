@@ -28,7 +28,7 @@ class Display:
         for sensor in configs["watchables"]:
             component = GraphComponent(graphPanel,sensor)
             self.components[sensor] = component
-            graphPanel.add(component.getWidget())
+            graphPanel.add(component.getWidget(),width=400,height = 320)
 
         graphPanel.pack()
         panel.add(graphPanel)
