@@ -14,7 +14,7 @@ bricks             :   (sensor|actuator)+;
     sensor         :   digital_sensor | analog_sensor ;
     digital_sensor :   'digital sensor'  id=DIGITAL_IDENTIFIER ':' port=NUMBER watch? ;
     analog_sensor  :   'analog sensor' id=ANALOG_IDENTIFIER ':' port=NUMBER watch?;
-    watch          :   'watch' (graph | text);
+    watch          :   'watch' '{' (graph | text)+ '}';
     graph          :   'graph' color=GRAPH_COLOR graph_name=IDENTIFIER;
     text           :   'text';
     actuator       :   'actuator' location watch?;

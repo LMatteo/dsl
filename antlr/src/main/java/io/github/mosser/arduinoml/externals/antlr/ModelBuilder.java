@@ -133,6 +133,7 @@ public class ModelBuilder extends ArduinomlBaseListener {
         sensors.put(sensor.getName(), sensor);
         if (isWatched) {
             this.currentWatchable = sensor;
+            this.watchables.add(this.currentWatchable);
         }
     }
 
@@ -142,18 +143,14 @@ public class ModelBuilder extends ArduinomlBaseListener {
         config.setColor(ctx.color.getText());
         config.setGraphId(ctx.graph_name.getText());
         config.setBrickId(((Brick)this.currentWatchable).getName());
-        this.currentWatchable.setConfig(config);
-        this.watchables.add(this.currentWatchable);
-        this.currentWatchable = null;
+        this.currentWatchable.addConfig(config);
     }
 
     @Override
     public void enterText(ArduinomlParser.TextContext ctx) {
         TextConfig config = new TextConfig();
         config.setBrickId(((Brick)this.currentWatchable).getName());
-        this.currentWatchable.setConfig(config);
-        this.watchables.add(this.currentWatchable);
-        this.currentWatchable = null;
+        this.currentWatchable.addConfig(config);
     }
 
     @Override
@@ -179,7 +176,18 @@ public class ModelBuilder extends ArduinomlBaseListener {
         actuators.put(actuator.getName(), actuator);
         if (ctx.watch() != null) {
             this.currentWatchable = actuator;
+            this.watchables.add(this.currentWatchable);
         }
+    }
+
+    @Override
+    public void exitSensor(ArduinomlParser.SensorContext ctx) {
+        this.currentWatchable = null;
+    }
+
+    @Override
+    public void exitActuator(ArduinomlParser.ActuatorContext ctx) {
+        this.currentWatchable = null;
     }
 
     @Override

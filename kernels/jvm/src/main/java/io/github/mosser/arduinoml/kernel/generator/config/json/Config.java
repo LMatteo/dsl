@@ -23,7 +23,7 @@ public class Config {
     }
 
     public void addWatchable(Watchable watchable) {
-        watchable.getConfig().accept(this);
+        watchable.getConfigs().forEach(config -> config.accept(this));
     }
 
 
