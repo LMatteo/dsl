@@ -2,11 +2,14 @@ application verySimpleAlarm
 
 # Declaring bricks
 digital sensor D_button: 9 watch {
-    graph blue  graphOne
+    graph blue  example
     graph red   graphTwo
 }
-analog sensor A_buttonTwo: 1 watch { graph blue  graphOne }
-actuator ledOne: 11 watch { text }
+analog sensor A_buttonTwo: 1 watch { graph green example }
+actuator ledOne: 11 watch {
+    text
+    graph red example
+}
 actuator buzzer: 12 watch { text }
 
 

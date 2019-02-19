@@ -47,7 +47,7 @@ NUMBER              :   DIGIT (DIGIT|'0')*;
 COMPARISON_OPERATOR :   '>' | '<';
 DIGITAL_IDENTIFIER  :   'D_'IDENTIFIER;
 ANALOG_IDENTIFIER   :   'A_'IDENTIFIER;
-GRAPH_COLOR         :   'blue' | 'red' | 'cyan' | 'magenta' | 'yellow' | 'black';
+GRAPH_COLOR         :   'blue' | 'red' | 'cyan' | 'magenta' | 'yellow' | 'black' | 'green';
 IDENTIFIER          :   LOWERCASE (LOWERCASE|UPPERCASE)+;
 SIGNAL              :   'HIGH' | 'LOW';
 
