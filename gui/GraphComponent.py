@@ -48,10 +48,11 @@ class GraphComponent:
                     self.datas[entry][0] = self.datas[entry][0][0:len(self.datas[entry][1])]
                 else :
                     self.datas[entry][1] = self.datas[entry][1][0:len(self.datas[entry][0])]                
-                tmpMaxlim = self.datas[entry][0][len(self.datas[entry][0])-1] if self.datas[entry][0][len(self.datas[entry][0])-1] > windowSize else windowSize
+                tmpMaxlim = self.datas[entry][0][-1] if self.datas[entry][0][-1] > windowSize else windowSize
                 if maxlim < tmpMaxlim:
                     maxlim = tmpMaxlim 
-                    lowerlim = maxlim-windowSize if maxlim > windowSize else 0
+                lowerlim = self.datas[entry][1][0]
+                lowerlim = maxlim-windowSize if maxlim > windowSize else 0
                 self.lines[entry].set_data(self.datas[entry][0], self.datas[entry][1])
         self.sub.set_xlim(lowerlim,maxlim)
         self.canvas.draw()
