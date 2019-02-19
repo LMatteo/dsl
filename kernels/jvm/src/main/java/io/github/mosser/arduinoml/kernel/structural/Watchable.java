@@ -2,18 +2,20 @@ package io.github.mosser.arduinoml.kernel.structural;
 
 import io.github.mosser.arduinoml.kernel.generator.config.BrickConfig;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Watchable  {
 
 
-    private BrickConfig config;
+    private List<BrickConfig> configs = new ArrayList<>();
+
 
     public abstract String generate();
 
-    public void setConfig(BrickConfig config) {
-        this.config = config;
-    }
+    public void addConfig(BrickConfig config) { this.configs.add(config); }
 
-    public BrickConfig getConfig() {
-        return this.config;
-    }
+
+    public List<BrickConfig> getConfigs() { return this.configs; }
+
 }

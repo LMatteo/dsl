@@ -1,18 +1,19 @@
 package io.github.mosser.arduinoml.kernel.generator.config;
 
+import io.github.mosser.arduinoml.kernel.generator.config.json.Config;
+import io.github.mosser.arduinoml.kernel.generator.config.json.TextEntry;
+
 public class TextConfig extends BrickConfig {
     public final String type = "Text";
-    public String BrickId;
 
     public String getType() {
         return type;
     }
 
-    public String getBrickId() {
-        return BrickId;
-    }
-
-    public void setBrickId(String brickId) {
-        BrickId = brickId;
+    @Override
+    public void accept(Config config) {
+        TextEntry textEntry = new TextEntry();
+        textEntry.setBrickId(this.getBrickId());
+        config.textEntries.add(textEntry);
     }
 }
