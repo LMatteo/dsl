@@ -11,6 +11,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 
     private final static String CURRENT_STATE = "current_state";
     private final static String CURRENT_MODE = "current_mode";
+    private final static int DATA_FREQUENCY = 5;
 
     public ToWiring() {
         this.result = new StringBuffer();
@@ -28,8 +29,9 @@ public class ToWiring extends Visitor<StringBuffer> {
     public void visit(App app) {
         w("// Wiring code generated from an ArduinoML model");
         w(String.format("// Application name: %s\n", app.getName()));
+        w("int i = 0;");
 
-        wnl("#define watch(modeName,stateName) Serial.print(\"Time:\");Serial.print(millis());Serial.print(\",Mode:\");Serial.print(modeName);Serial.print(\",State:\");Serial.print(stateName);");
+        wnl("#define watch(modeName,stateName) if(i++ % 10 == 0){Serial.print(\"Time:\");Serial.print(millis());Serial.print(\",Mode:\");Serial.print(modeName);Serial.print(\",State:\");Serial.print(stateName);}");
         for (Watchable watchable : app.getWatchs()) {
             wnl(watchable.generate());
         }
