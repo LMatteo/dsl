@@ -9,12 +9,15 @@ class DataUpdater(threading.Thread):
         threading.Thread.__init__(self)
         self.proceed = True
         self.serial = SerialReader(portname)
-        self.sensors = config['watchables']
+        self.sensors = []
+
+        for watchable in config['watchables']:
+            self.sensors.append(watchable['brickId'])
+
         self.data = dict()
         self.data['sensors'] = dict()
         self.data['mode'] = ""
         self.data['state'] = ""
-
 
         for sensor in self.sensors:
             self.data['sensors'][sensor] = ([],[])

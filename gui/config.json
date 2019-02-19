@@ -1,2 +1,1 @@
-{"modes":{"buzzer":["on","off"],"led":["on","off"]},
-  "watchables":["D_button","A_buttonTwo","ledOne"]}
+{"modes":{"buzzer":["onBuzzer","off"],"led":["on","off"]},"watchables":[{"type":"Graph","GraphId":"graphOne","color":"blue","brickId":"D_button"},{"type":"Graph","GraphId":"graphOne","color":"blue","brickId":"A_buttonTwo"},{"type":"Text","brickId":"ledOne"},{"type":"Text","brickId":"buzzer"}]}

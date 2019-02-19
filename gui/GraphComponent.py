@@ -5,14 +5,14 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 windowSize = 20
 
 class GraphComponent:
-    def __init__(self,master,name):
+    def __init__(self,master,name,color):
         self.fig = Figure(figsize=(5,4), dpi = 80)
 
         self.sub = self.fig.add_subplot(111)
         self.sub.set_title(name)
         self.xdata = []
         self.ydata = []
-        line, = self.sub.plot([], [],'g',color='green', marker='o', linestyle='dashed',linewidth=0, markersize=1)
+        line, = self.sub.plot([], [],'g',color=color, marker='o', linestyle='dashed',linewidth=0, markersize=1)
         self.sub.set_ylim(-0.1,1.1)
         self.sub.set_xlim(0,windowSize)
         self.line = line

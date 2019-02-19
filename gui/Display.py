@@ -1,7 +1,6 @@
-from matplotlib.figure import Figure
 from tkinter import *
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from GraphComponent import GraphComponent
+from TextComponent import TextComponent
 
 class Display:
     def __init__(self, configs):
@@ -24,11 +23,20 @@ class Display:
         panel.add(self.statePanel)
 
         self.components = dict()
-        graphPanel = PanedWindow(panel, orient=HORIZONTAL)
+        graphPanel = PanedWindow(panel,orient=VERTICAL)
+        i = 0
         for sensor in configs["watchables"]:
-            component = GraphComponent(graphPanel,sensor)
-            self.components[sensor] = component
-            graphPanel.add(component.getWidget(),width=400,height = 320)
+            if i % 3 == 0:
+                currentPanel = PanedWindow(graphPanel, orient=HORIZONTAL)
+                graphPanel.add(currentPanel)
+
+            if sensor['type'] == "Graph":
+                component = GraphComponent(graphPanel,sensor['GraphId'],sensor['color'])
+            elif sensor['type'] == 'Text' :
+                component = TextComponent(graphPanel,sensor['brickId'])
+            self.components[sensor['brickId']] = component
+            currentPanel.add(component.getWidget(),width=400,height = 320)
+            i += 1
 
         graphPanel.pack()
         panel.add(graphPanel)
@@ -37,8 +45,6 @@ class Display:
     def init(self,data, refreshFrequence):
         self.window.after(refreshFrequence,self.update, data,refreshFrequence)
         self.window.mainloop()
-
-
 
     def update(self,data, freq):
         try:
