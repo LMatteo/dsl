@@ -25,10 +25,14 @@ class Display:
 
         self.components = dict()
         graphPanel = PanedWindow(panel, orient=HORIZONTAL)
-        for sensor in configs["watchables"]:
-            component = GraphComponent(graphPanel,sensor)
-            self.components[sensor] = component
+        for key, value in configs['graphEntries'].items():
+            component = GraphComponent(graphPanel, key, value)
+            self.components[key] = component
             graphPanel.add(component.getWidget())
+        #for sensor in configs["watchables"]:
+        #    component = GraphComponent(graphPanel,sensor)
+        #    self.components[sensor] = component
+        #    graphPanel.add(component.getWidget())
 
         graphPanel.pack()
         panel.add(graphPanel)
@@ -44,8 +48,8 @@ class Display:
         try:
             self.currentMod.set(data['mode'])
             self.currentState.set(data['state'])
-            for component in self.components:
-                self.components[component].update(data['sensors'][component])
+            for key, value in self.components.items():
+                value.update(data['sensors'])
 
             self.window.after(freq,self.update,data,freq)
         except:

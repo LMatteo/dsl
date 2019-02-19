@@ -1,2 +1,44 @@
-{"modes":{"buzzer":["on","off"],"led":["on","off"]},
-  "watchables":["D_button","A_buttonTwo","ledOne"]}
+{
+  "modes": {
+    "buzzer": [
+      "onBuzzer",
+      "off"
+    ],
+    "led": [
+      "on",
+      "off"
+    ]
+  },
+  "graphEntries": {
+    "graphOne": [
+      {
+        "brickId": "D_button",
+        "color": "blue"
+      },
+      {
+        "brickId": "A_buttonTwo",
+        "color": "red"
+      }
+    ],
+    "graphTwo": [
+      {
+        "brickId": "D_button",
+        "color": "red"
+      }
+    ]
+  },
+  "textEntries": [
+    {
+      "brickId": "ledOne"
+    },
+    {
+      "brickId": "buzzer"
+    }
+  ],
+  "watchables": [
+    "D_button",
+    "A_buttonTwo",
+    "ledOne",
+    "buzzer"
+  ]
+}
