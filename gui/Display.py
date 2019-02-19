@@ -36,7 +36,6 @@ class Display:
 
         for entry in configs['textEntries']:
             if i % 3 == 0:
-                print('ca passe ici')
                 currentPanel = PanedWindow(graphPanel, orient=HORIZONTAL)
                 graphPanel.add(currentPanel)
             component = TextComponent(graphPanel,entry['brickId'])

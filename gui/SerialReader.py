@@ -16,6 +16,5 @@ class SerialReader:
                 res[i.split(":")[0]] = i.split(":")[1]
             return res
         except:
-            print("could not read line")
             raise IOError
 

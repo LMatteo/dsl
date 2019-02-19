@@ -26,7 +26,7 @@ class GraphComponent:
             self.datas[sensor['brickId']] = []
             self.datas[sensor['brickId']].append([])
             self.datas[sensor['brickId']].append([])            
-            line, = self.sub.plot(self.datas[sensor['brickId']][0], self.datas[sensor['brickId']][1], color=self.color[sensor['color']], marker='o', linestyle='dashed',linewidth=0, markersize=1)
+            line, = self.sub.plot(self.datas[sensor['brickId']][0], self.datas[sensor['brickId']][1], color=self.color[sensor['color']], marker='o', linestyle='solid')
             self.lines[sensor['brickId']] = line
         self.sub.set_ylim(-0.1,1.1)
         self.sub.set_xlim(0,windowSize)
@@ -42,8 +42,8 @@ class GraphComponent:
         maxlim = 0
         for entry in data:
             if entry in self.datas:
-                self.datas[entry][0].extend(data[entry][0])
-                self.datas[entry][1].extend(data[entry][1])
+                self.datas[entry][0] = data[entry][0]
+                self.datas[entry][1] = data[entry][1]
                 if len(self.datas[entry][0]) > len(self.datas[entry][1]):
                     self.datas[entry][0] = self.datas[entry][0][0:len(self.datas[entry][1])]
                 else :
