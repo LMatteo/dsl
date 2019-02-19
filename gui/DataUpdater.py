@@ -2,7 +2,7 @@ import threading
 import time
 from SerialReader import SerialReader
 
-maxLength = 50
+maxLength = 250
 
 class DataUpdater(threading.Thread):
     def __init__(self, portname,config):
