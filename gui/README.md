@@ -10,4 +10,4 @@ sudo apt-get install python3-pil.imagetk
 
 pour lancer le gui : 
 
-sudo python3 main.py <port serial> <fichier de configuration>
+sudo python3 main.py port_serial fichier_configuration>
