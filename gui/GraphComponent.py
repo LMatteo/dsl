@@ -2,13 +2,12 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
-windowSize = 20000
+windowSize = 20
 
 class GraphComponent:
     def __init__(self,master,name,sensors):
-        self.fig = Figure()
+        self.fig = Figure(figsize=(5,4), dpi = 80)
 
-        self.fig.suptitle(name)
         self.sub = self.fig.add_subplot(111)
         
         self.color = {}
@@ -20,13 +19,14 @@ class GraphComponent:
         self.color['yellow'] = 'y'
         self.color['black'] = 'k'
 
+        self.sub.set_title(name)
         self.datas = {}
         self.lines = {}
         for sensor in sensors:
             self.datas[sensor['brickId']] = []
             self.datas[sensor['brickId']].append([])
             self.datas[sensor['brickId']].append([])            
-            line, = self.sub.plot(self.datas[sensor['brickId']][0], self.datas[sensor['brickId']][1],'-%s' % self.color[sensor['color']])
+            line, = self.sub.plot(self.datas[sensor['brickId']][0], self.datas[sensor['brickId']][1], color=self.color[sensor['color']], marker='o', linestyle='dashed',linewidth=0, markersize=1)
             self.lines[sensor['brickId']] = line
         self.sub.set_ylim(-0.1,1.1)
         self.sub.set_xlim(0,windowSize)
@@ -53,15 +53,8 @@ class GraphComponent:
                     maxlim = tmpMaxlim 
                     lowerlim = maxlim-windowSize if maxlim > windowSize else 0
                 self.lines[entry].set_data(self.datas[entry][0], self.datas[entry][1])
-                
-                print('##############' + entry + '#############' )
-                print('########## x ###########')
-                print(self.datas[entry][0])
-                print('########## y ###########')
-                print(self.datas[entry][1])
         self.sub.set_xlim(lowerlim,maxlim)
         self.canvas.draw()
-        self.canvas.flush_events()
 
 
     @staticmethod
